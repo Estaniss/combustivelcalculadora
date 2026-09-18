@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Combustível — Calculadora e Controle",
+    "slug": "combustivel-calculadora-controle",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0E7C3A"
+    },
+
+    "assetBundlePatterns": ["**/*"],
+
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "package": "com.estanislau.combustivelcalculadora",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0E7C3A"
+      },
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID"
+      ]
+    },
+
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+        }
+      ]
+    ],
+
+    "extra": {
+      "eas": {
+        "projectId": "SEU-PROJECT-ID-AQUI"
+      }
+    }
+  }
+}
