@@ -50,9 +50,8 @@ export function RefuelingHistoryScreen() {
     load();
   };
 
-  /** Consumo calculado com base no abastecimento anterior (mesmo veículo). */
   const getConsumptionFor = (item: Refueling, index: number): number | null => {
-    const previous = items[index + 1]; // lista ordenada da mais recente para a mais antiga
+    const previous = items[index + 1];
     if (!previous) return null;
     const distance = item.odometer - previous.odometer;
     if (distance <= 0) return null;
@@ -90,6 +89,16 @@ export function RefuelingHistoryScreen() {
                     {FUEL_LABELS[item.fuelType]}
                   </Text>
                 </View>
+                {item.establishment ? (
+                  <Text
+                    style={[
+                      theme.typography.caption,
+                      { color: theme.colors.primary, fontWeight: '600', marginTop: 2 },
+                    ]}
+                  >
+                    📍 {item.establishment}
+                  </Text>
+                ) : null}
                 <Text style={[theme.typography.body, { color: theme.colors.text, marginTop: 4 }]}>
                   {item.liters.toFixed(1)} L · {formatCurrency(item.pricePerLiter)}/L
                 </Text>
