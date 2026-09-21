@@ -6,15 +6,14 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#0E7C3A"
     },
-
-    "assetBundlePatterns": ["**/*"],
-
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.estanislau.combustivelcalculadora",
@@ -27,7 +26,6 @@
         "com.google.android.gms.permission.AD_ID"
       ]
     },
-
     "plugins": [
       [
         "react-native-google-mobile-ads",
@@ -37,11 +35,11 @@
         }
       ]
     ],
-
     "extra": {
       "eas": {
-        "projectId": "SEU-PROJECT-ID-AQUI"
+        "projectId": "2dabd0de-7848-443b-a017-72038f488836"
       }
-    }
+    },
+    "owner": "estaniss"
   }
 }
