@@ -11,7 +11,11 @@ export interface MonthStatistics {
 
 function isSameMonth(dateIso: string, reference: Date): boolean {
   const date = new Date(dateIso);
-  return date.getFullYear() === reference.getFullYear() && date.getMonth() === reference.getMonth();
+
+  return (
+    date.getUTCFullYear() === reference.getUTCFullYear() &&
+    date.getUTCMonth() === reference.getUTCMonth()
+  );
 }
 
 /**

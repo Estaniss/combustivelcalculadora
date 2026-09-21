@@ -33,8 +33,8 @@ jest.mock('@react-native-firebase/analytics', () => () => ({
   setAnalyticsCollectionEnabled: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('@react-native-firebase/crashlytics', () => () => ({
+/* jest.mock('@react-native-firebase/crashlytics', () => () => ({
   log: jest.fn(),
   recordError: jest.fn(),
   setCrashlyticsCollectionEnabled: jest.fn(() => Promise.resolve()),
-}));
+})); */

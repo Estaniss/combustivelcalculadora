@@ -44,8 +44,8 @@ export const appConfig: AppConfig = {
   appVersion: '1.0.0',
   appDescription:
     'Calcule gastos de viagem, compare gasolina x etanol e controle seus abastecimentos.',
-  developerName: 'Seu Nome / Sua Empresa',
-  contactEmail: 'contato@seuapp.com',
+  developerName: 'Estanis',
+  contactEmail: 'estanislauthomas@gmail.com',
 
   primaryColor: '#0E7C3A',
   secondaryColor: '#F5A623',
@@ -54,8 +54,8 @@ export const appConfig: AppConfig = {
   showSettings: true,
   showOnboarding: true,
 
-  enableAnalytics: false, // TEMP: desligado para rodar no Expo Go sem dev client — reative quando for testar em development build
-  enableAds: true, // TEMP: idem — ver nota no README sobre incompatibilidade do react-native-google-mobile-ads 14.x com old architecture
+  enableAnalytics: true,
+  enableAds: true, 
   enableBanner: true,
   enableInterstitial: true,
   enableRewarded: false,
