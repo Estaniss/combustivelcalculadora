@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '@theme/index';
 import { Header } from '@components/Header';
@@ -33,15 +33,23 @@ export function RefuelingFormScreen() {
   const [pricePerLiter, setPricePerLiter] = useState('');
   const [fuelType, setFuelType] = useState<RefuelingFuelType>('gasoline');
   const [fullTank, setFullTank] = useState(true);
+  const [establishment, setEstablishment] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [noVehicle, setNoVehicle] = useState(false);
 
-  useEffect(() => {
-    vehicleRepository.getSelected().then((vehicle) => {
-      if (vehicle) setVehicleId(vehicle.id);
-      else setNoVehicle(true);
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      vehicleRepository.getSelected().then((vehicle) => {
+        if (vehicle) {
+          setVehicleId(vehicle.id);
+          setNoVehicle(false);
+        } else {
+          setVehicleId(null);
+          setNoVehicle(true);
+        }
+      });
+    }, []),
+  );
 
   const totalCost =
     liters && pricePerLiter ? parseLocaleNumber(liters) * parseLocaleNumber(pricePerLiter) : 0;
@@ -77,6 +85,7 @@ export function RefuelingFormScreen() {
       pricePerLiter: priceValue,
       fuelType,
       fullTank,
+      establishment: establishment.trim() || undefined,
     });
     analyticsService.trackEvent(AnalyticsEvents.REFUELING_CREATED);
     navigation.goBack();
@@ -128,6 +137,12 @@ export function RefuelingFormScreen() {
           value={pricePerLiter}
           onChangeText={setPricePerLiter}
           placeholder="Ex: 6,20"
+        />
+        <Input
+          label="Estabelecimento (opcional)"
+          value={establishment}
+          onChangeText={setEstablishment}
+          placeholder="Ex: Posto Ipiranga - Marginal"
         />
 
         <Text

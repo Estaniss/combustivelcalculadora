@@ -10,6 +10,7 @@ export interface Refueling {
   totalCost: number;
   fuelType: RefuelingFuelType;
   fullTank: boolean;
+  establishment?: string;
   createdAt: string;
 }
 
