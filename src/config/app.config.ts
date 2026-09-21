@@ -62,8 +62,8 @@ export const appConfig: AppConfig = {
 
   minimumIntervalBetweenInterstitials: 60_000,
 
-  privacyPolicyUrl: 'https://seusite.com/privacidade',
-  termsUrl: 'https://seusite.com/termos',
+  privacyPolicyUrl: 'https://termos-politicas.vercel.app/apps/combustivel/privacidade',
+  termsUrl: 'https://termos-politicas.vercel.app/apps/combustivel/termos',
 
   androidPackageName: 'com.estanislau.combustivelcalculadora',
 };
