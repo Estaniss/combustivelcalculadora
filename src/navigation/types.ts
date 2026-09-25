@@ -7,9 +7,10 @@ export type RootStackParamList = {
   TripCalculator: undefined;
   FuelComparison: undefined;
   Consumption: undefined;
-  RefuelingForm: undefined;
+  RefuelingForm: { refuelingId?: string } | undefined;
   RefuelingHistory: undefined;
   Statistics: undefined;
+  TripHistory: undefined;
 };
 
 declare global {

@@ -12,6 +12,13 @@ import { useAds } from '@hooks/useAds';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 import { calculateTrip, InvalidInputError } from '../services/tripCalculator';
 import { formatCurrency, formatKm, parseLocaleNumber } from '@utils/format';
+import { MoneyInput } from '@/components/MoneyInput';
+import { tripRepository } from '../services/tripRepository';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '@/navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'TripCalculator'>;
 
 /**
  * "Quanto vou gastar?" — calculadora de custo de viagem.
@@ -24,11 +31,13 @@ export function TripCalculatorScreen() {
 
   const [distance, setDistance] = useState('');
   const [consumption, setConsumption] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(0);
   const [roundTrip, setRoundTrip] = useState(false);
   const [people, setPeople] = useState('1');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ReturnType<typeof calculateTrip> | null>(null);
+
+  const navigation = useNavigation<Nav>();
 
   const handleCalculate = () => {
     setError(null);
@@ -36,11 +45,23 @@ export function TripCalculatorScreen() {
       const calculated = calculateTrip({
         distanceKm: parseLocaleNumber(distance),
         consumptionKmPerLiter: parseLocaleNumber(consumption),
-        pricePerLiter: parseLocaleNumber(price),
+        pricePerLiter: price,
         roundTrip,
         numberOfPeople: Number(people) || 1,
       });
       setResult(calculated);
+      tripRepository.create({
+        distanceKm: parseLocaleNumber(distance),
+        consumptionKmPerLiter: parseLocaleNumber(consumption),
+        pricePerLiter: price,
+        roundTrip,
+        numberOfPeople: Number(people) || 1,
+        totalDistanceKm: calculated.totalDistanceKm,
+        requiredLiters: calculated.requiredLiters,
+        totalCost: calculated.totalCost,
+        costPerKm: calculated.costPerKm,
+        costPerPerson: calculated.costPerPerson,
+      });
       analyticsService.trackEvent(AnalyticsEvents.TRIP_CALCULATED);
       setTimeout(() => showInterstitial(), 1200);
     } catch (e) {
@@ -51,7 +72,12 @@ export function TripCalculatorScreen() {
 
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
-      <Header title="Quanto vou gastar?" showBack />
+      <Header
+        title="Quanto vou gastar?"
+        showBack
+        rightIcon={<Text style={{ fontSize: 20 }}>📜</Text>}
+        onRightPress={() => navigation.navigate('TripHistory')}
+      />
       <ScrollView
         contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
         keyboardShouldPersistTaps="handled"
@@ -70,14 +96,7 @@ export function TripCalculatorScreen() {
           onChangeText={setConsumption}
           placeholder="Ex: 12"
         />
-        <Input
-          label="Preço do combustível (R$/L)"
-          keyboard="decimal"
-          value={price}
-          onChangeText={setPrice}
-          placeholder="Ex: 6,20"
-        />
-
+        <MoneyInput label="Preço do combustível (R$/L)" value={price} onChangeValue={setPrice} />
         <View style={[styles.row, { marginTop: theme.spacing.sm }]}>
           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Ida e volta</Text>
           <Switch value={roundTrip} onValueChange={setRoundTrip} />
