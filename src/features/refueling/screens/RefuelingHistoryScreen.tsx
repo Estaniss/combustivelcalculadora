@@ -120,8 +120,27 @@ export function RefuelingHistoryScreen() {
                     Consumo: {formatKmPerLiter(consumption)}
                   </Text>
                 )}
-                <View style={{ marginTop: theme.spacing.sm }}>
-                  <Button label="Excluir" variant="outline" onPress={() => handleDelete(item.id)} />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    gap: theme.spacing.sm,
+                    marginTop: theme.spacing.sm,
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      label="Editar"
+                      variant="outline"
+                      onPress={() => navigation.navigate('RefuelingForm', { refuelingId: item.id })}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      label="Excluir"
+                      variant="outline"
+                      onPress={() => handleDelete(item.id)}
+                    />
+                  </View>
                 </View>
               </Card>
             );

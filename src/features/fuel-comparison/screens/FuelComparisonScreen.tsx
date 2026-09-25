@@ -13,15 +13,16 @@ import { analyticsService, AnalyticsEvents } from '@services/analytics/analytics
 import { compareFuelTypes, FuelComparisonResult } from '../services/fuelComparison';
 import { InvalidInputError } from '@features/trip-calculator/services/tripCalculator';
 import { formatCurrency, formatNumber, parseLocaleNumber } from '@utils/format';
+import { MoneyInput } from '@/components/MoneyInput';
 
 export function FuelComparisonScreen() {
   const theme = useTheme();
   const { showInterstitial } = useAds();
   useAnalyticsScreenView('FuelComparison');
 
-  const [gasolinePrice, setGasolinePrice] = useState('');
+  const [gasolinePrice, setGasolinePrice] = useState(0);
   const [gasolineConsumption, setGasolineConsumption] = useState('');
-  const [ethanolPrice, setEthanolPrice] = useState('');
+  const [ethanolPrice, setEthanolPrice] = useState(0);
   const [ethanolConsumption, setEthanolConsumption] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<FuelComparisonResult | null>(null);
@@ -31,11 +32,11 @@ export function FuelComparisonScreen() {
     try {
       const calculated = compareFuelTypes(
         {
-          pricePerLiter: parseLocaleNumber(gasolinePrice),
+          pricePerLiter: gasolinePrice,
           consumptionKmPerLiter: parseLocaleNumber(gasolineConsumption),
         },
         {
-          pricePerLiter: parseLocaleNumber(ethanolPrice),
+          pricePerLiter: ethanolPrice,
           consumptionKmPerLiter: parseLocaleNumber(ethanolConsumption),
         },
       );
@@ -65,12 +66,10 @@ export function FuelComparisonScreen() {
         <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
           GASOLINA
         </Text>
-        <Input
-          label="Preço (R$/L)"
-          keyboard="decimal"
+        <MoneyInput
+          label="Preço por litro"
           value={gasolinePrice}
-          onChangeText={setGasolinePrice}
-          placeholder="Ex: 6,20"
+          onChangeValue={setGasolinePrice}
         />
         <Input
           label="Consumo (km/L)"
@@ -88,13 +87,7 @@ export function FuelComparisonScreen() {
         >
           ETANOL
         </Text>
-        <Input
-          label="Preço (R$/L)"
-          keyboard="decimal"
-          value={ethanolPrice}
-          onChangeText={setEthanolPrice}
-          placeholder="Ex: 4,20"
-        />
+        <MoneyInput label="Preço por litro" value={ethanolPrice} onChangeValue={setEthanolPrice} />
         <Input
           label="Consumo (km/L)"
           keyboard="decimal"

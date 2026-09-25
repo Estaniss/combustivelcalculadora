@@ -17,6 +17,7 @@ import { StatisticsScreen } from '@features/statistics/screens/StatisticsScreen'
 import { appConfig } from '@config/app.config';
 import { storageService, StorageKeys } from '@services/storage/storageService';
 import { Loading } from '@components/Loading';
+import { TripHistoryScreen } from '@/features/trip-calculator/screens/TripHistoryScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -59,6 +60,7 @@ export function AppNavigator() {
         <Stack.Screen name="RefuelingForm" component={RefuelingFormScreen} />
         <Stack.Screen name="RefuelingHistory" component={RefuelingHistoryScreen} />
         <Stack.Screen name="Statistics" component={StatisticsScreen} />
+        <Stack.Screen name="TripHistory" component={TripHistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

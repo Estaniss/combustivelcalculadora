@@ -2,7 +2,7 @@
   "expo": {
     "name": "Combustível — Calculadora e Controle",
     "slug": "combustivel-calculadora-controle",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,7 +12,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.estanislau.combustivelcalculadora",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F8F8F3"

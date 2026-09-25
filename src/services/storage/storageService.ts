@@ -16,6 +16,7 @@ export const StorageKeys = {
   VEHICLES: '@combustivel/vehicles',
   REFUELINGS: '@combustivel/refuelings',
   SELECTED_VEHICLE_ID: '@combustivel/selected_vehicle_id',
+  TRIPS: '@combustivel/trips',
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];

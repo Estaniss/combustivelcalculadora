@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '@theme/index';
 import { Header } from '@components/Header';
 import { Input } from '@components/Input';
+import { MoneyInput } from '@components/MoneyInput';
 import { Button } from '@components/Button';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 import { vehicleRepository } from '@features/vehicles/services/vehicleRepository';
@@ -15,6 +16,7 @@ import { parseLocaleNumber, formatCurrency } from '@utils/format';
 import { RootStackParamList } from '@/navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'RefuelingForm'>;
+type FormRoute = RouteProp<RootStackParamList, 'RefuelingForm'>;
 
 const FUEL_OPTIONS: { key: RefuelingFuelType; label: string }[] = [
   { key: 'gasoline', label: 'Gasolina' },
@@ -22,15 +24,17 @@ const FUEL_OPTIONS: { key: RefuelingFuelType; label: string }[] = [
   { key: 'diesel', label: 'Diesel' },
 ];
 
-/** "+ Abastecer" — registra um novo abastecimento para o veículo selecionado. */
+/** "+ Abastecer" — cria OU edita um abastecimento (dependendo se recebe refuelingId). */
 export function RefuelingFormScreen() {
   const theme = useTheme();
   const navigation = useNavigation<Nav>();
+  const route = useRoute<FormRoute>();
+  const refuelingId = route.params?.refuelingId;
 
   const [vehicleId, setVehicleId] = useState<string | null>(null);
   const [odometer, setOdometer] = useState('');
   const [liters, setLiters] = useState('');
-  const [pricePerLiter, setPricePerLiter] = useState('');
+  const [pricePerLiter, setPricePerLiter] = useState(0);
   const [fuelType, setFuelType] = useState<RefuelingFuelType>('gasoline');
   const [fullTank, setFullTank] = useState(true);
   const [establishment, setEstablishment] = useState('');
@@ -48,11 +52,24 @@ export function RefuelingFormScreen() {
           setNoVehicle(true);
         }
       });
-    }, []),
+
+      if (refuelingId) {
+        refuelingRepository.getAll().then((items) => {
+          const existing = items.find((r) => r.id === refuelingId);
+          if (!existing) return;
+          setVehicleId(existing.vehicleId);
+          setOdometer(String(existing.odometer));
+          setLiters(String(existing.liters));
+          setPricePerLiter(existing.pricePerLiter);
+          setFuelType(existing.fuelType);
+          setFullTank(existing.fullTank);
+          setEstablishment(existing.establishment ?? '');
+        });
+      }
+    }, [refuelingId]),
   );
 
-  const totalCost =
-    liters && pricePerLiter ? parseLocaleNumber(liters) * parseLocaleNumber(pricePerLiter) : 0;
+  const totalCost = liters && pricePerLiter ? parseLocaleNumber(liters) * pricePerLiter : 0;
 
   const handleSave = async () => {
     if (!vehicleId) {
@@ -61,7 +78,6 @@ export function RefuelingFormScreen() {
     }
     const odometerValue = parseLocaleNumber(odometer);
     const litersValue = parseLocaleNumber(liters);
-    const priceValue = parseLocaleNumber(pricePerLiter);
 
     if (!odometerValue || odometerValue <= 0) {
       setError('Informe um odômetro válido.');
@@ -71,23 +87,29 @@ export function RefuelingFormScreen() {
       setError('Informe uma quantidade de litros válida.');
       return;
     }
-    if (!priceValue || priceValue <= 0) {
+    if (!pricePerLiter || pricePerLiter <= 0) {
       setError('Informe um preço por litro válido.');
       return;
     }
 
     setError(null);
-    await refuelingRepository.create({
+    const input = {
       vehicleId,
       date: new Date().toISOString(),
       odometer: odometerValue,
       liters: litersValue,
-      pricePerLiter: priceValue,
+      pricePerLiter,
       fuelType,
       fullTank,
       establishment: establishment.trim() || undefined,
-    });
-    analyticsService.trackEvent(AnalyticsEvents.REFUELING_CREATED);
+    };
+
+    if (refuelingId) {
+      await refuelingRepository.update(refuelingId, input);
+    } else {
+      await refuelingRepository.create(input);
+      analyticsService.trackEvent(AnalyticsEvents.REFUELING_CREATED);
+    }
     navigation.goBack();
   };
 
@@ -112,7 +134,7 @@ export function RefuelingFormScreen() {
 
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
-      <Header title="Abastecer" showBack />
+      <Header title={refuelingId ? 'Editar abastecimento' : 'Abastecer'} showBack />
       <ScrollView
         contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
         keyboardShouldPersistTaps="handled"
@@ -131,12 +153,10 @@ export function RefuelingFormScreen() {
           onChangeText={setLiters}
           placeholder="Ex: 37,5"
         />
-        <Input
-          label="Preço por litro (R$)"
-          keyboard="decimal"
+        <MoneyInput
+          label="Preço por litro"
           value={pricePerLiter}
-          onChangeText={setPricePerLiter}
-          placeholder="Ex: 6,20"
+          onChangeValue={setPricePerLiter}
         />
         <Input
           label="Estabelecimento (opcional)"
@@ -186,7 +206,10 @@ export function RefuelingFormScreen() {
         ) : null}
 
         <View style={{ marginTop: theme.spacing.md }}>
-          <Button label="Salvar abastecimento" onPress={handleSave} />
+          <Button
+            label={refuelingId ? 'Salvar alterações' : 'Salvar abastecimento'}
+            onPress={handleSave}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

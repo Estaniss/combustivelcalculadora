@@ -12,6 +12,7 @@ import { analyticsService, AnalyticsEvents } from '@services/analytics/analytics
 import { calculateAverageConsumption, ConsumptionResult } from '../services/consumptionCalculator';
 import { InvalidInputError } from '@features/trip-calculator/services/tripCalculator';
 import { formatCurrency, formatKm, formatKmPerLiter, parseLocaleNumber } from '@utils/format';
+import { MoneyInput } from '@/components/MoneyInput';
 
 export function ConsumptionScreen() {
   const theme = useTheme();
@@ -20,7 +21,7 @@ export function ConsumptionScreen() {
   const [previousOdometer, setPreviousOdometer] = useState('');
   const [currentOdometer, setCurrentOdometer] = useState('');
   const [liters, setLiters] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ConsumptionResult | null>(null);
 
@@ -31,7 +32,7 @@ export function ConsumptionScreen() {
         previousOdometer: parseLocaleNumber(previousOdometer),
         currentOdometer: parseLocaleNumber(currentOdometer),
         liters: parseLocaleNumber(liters),
-        pricePerLiter: price ? parseLocaleNumber(price) : undefined,
+        pricePerLiter: price,
       });
       setResult(calculated);
       analyticsService.trackEvent(AnalyticsEvents.CONSUMPTION_CALCULATED);
@@ -69,13 +70,7 @@ export function ConsumptionScreen() {
           onChangeText={setLiters}
           placeholder="Ex: 37,5"
         />
-        <Input
-          label="Preço por litro (opcional)"
-          keyboard="decimal"
-          value={price}
-          onChangeText={setPrice}
-          placeholder="Ex: 6,20"
-        />
+        <MoneyInput label="Preço por litro" value={price} onChangeValue={setPrice} />
 
         {error ? (
           <Text style={[theme.typography.caption, { color: theme.colors.error }]}>{error}</Text>
