@@ -51,7 +51,14 @@ export function HomeScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={[styles.topBar, { paddingHorizontal: theme.spacing.lg }]}>
-        <Text style={[theme.typography.title, { color: theme.colors.text, fontSize: 20 }]}>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[
+            theme.typography.title,
+            { color: theme.colors.text, fontSize: 20, flex: 1, marginRight: 8 },
+          ]}
+        >
           {appConfig.appName}
         </Text>
         <Pressable
@@ -76,7 +83,7 @@ export function HomeScreen() {
             end={{ x: 1, y: 1 }}
             style={[styles.hero, theme.shadow.md, { borderRadius: theme.borderRadius.lg }]}
           >
-            <Text style={styles.heroEmoji}>🚗</Text>
+            <Text style={styles.heroEmoji}>{vehicle.icon}</Text>
             <Text style={[theme.typography.subtitle, styles.heroTitle]}>{vehicle.name}</Text>
             <View style={styles.heroStatsRow}>
               {vehicle.averageConsumption ? (

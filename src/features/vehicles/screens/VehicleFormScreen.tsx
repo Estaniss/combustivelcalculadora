@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,9 +9,11 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 import { vehicleRepository } from '../services/vehicleRepository';
-import { Vehicle, FuelType } from '@/domain/vehicle';
+import { Vehicle, FuelType, VEHICLE_ICONS, VehicleIcon } from '@/domain/vehicle';
 import { parseLocaleNumber } from '@utils/format';
 import { RootStackParamList } from '@/navigation/types';
+import { Autocomplete } from '@components/Autocomplete';
+import { CAR_BRANDS } from '@/constants/carBrands';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'VehicleForm'>;
 type FormRoute = RouteProp<RootStackParamList, 'VehicleForm'>;
@@ -36,6 +38,7 @@ export function VehicleFormScreen() {
   const [year, setYear] = useState('');
   const [fuelType, setFuelType] = useState<FuelType>('flex');
   const [averageConsumption, setAverageConsumption] = useState('');
+  const [icon, setIcon] = useState<VehicleIcon>(VEHICLE_ICONS[0]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,6 +52,7 @@ export function VehicleFormScreen() {
       setYear(vehicle.year ? String(vehicle.year) : '');
       setFuelType(vehicle.fuelType);
       setAverageConsumption(vehicle.averageConsumption ? String(vehicle.averageConsumption) : '');
+      setIcon(vehicle.icon ?? VEHICLE_ICONS[0]);
     });
   }, [vehicleId]);
 
@@ -66,6 +70,7 @@ export function VehicleFormScreen() {
       year: year ? Number(year) : undefined,
       fuelType,
       averageConsumption: averageConsumption ? parseLocaleNumber(averageConsumption) : undefined,
+      icon,
     };
 
     if (vehicleId) {
@@ -81,17 +86,44 @@ export function VehicleFormScreen() {
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title={vehicleId ? 'Editar carro' : 'Novo carro'} showBack />
       <ScrollView contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}>
+        <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
+          ÍCONE DO VEÍCULO
+        </Text>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
+          {VEHICLE_ICONS.map((opt) => (
+            <Pressable
+              key={opt}
+              onPress={() => setIcon(opt)}
+              accessibilityRole="button"
+              accessibilityLabel={`Ícone ${opt}`}
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: theme.borderRadius.md,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.colors.surface,
+                borderWidth: icon === opt ? 2 : 1,
+                borderColor: icon === opt ? theme.colors.primary : theme.colors.border,
+              }}
+            >
+              <Text style={{ fontSize: 26 }}>{opt}</Text>
+            </Pressable>
+          ))}
+        </View>
+
         <Input
           label="Nome do carro *"
           value={name}
           onChangeText={setName}
           placeholder="Ex: Meu Civic"
         />
-        <Input
+        <Autocomplete
           label="Marca (opcional)"
           value={brand}
           onChangeText={setBrand}
-          placeholder="Ex: Honda"
+          data={CAR_BRANDS}
+          placeholder="Digite pra buscar... Ex: Honda"
         />
         <Input
           label="Modelo (opcional)"

@@ -41,7 +41,7 @@ export interface AppConfig {
 export const appConfig: AppConfig = {
   appName: 'Combustível — Calculadora e Controle',
   appSlug: 'combustivel-calculadora-controle',
-  appVersion: '1.0.0',
+  appVersion: '1.0.1',
   appDescription:
     'Calcule gastos de viagem, compare gasolina x etanol e controle seus abastecimentos.',
   developerName: 'Estanis',

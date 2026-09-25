@@ -93,7 +93,7 @@ export function VehiclesScreen() {
                     { color: theme.colors.text, fontWeight: '600' },
                   ]}
                 >
-                  🚗 {item.name}
+                  {item.icon} {item.name}
                 </Text>
                 {(item.brand || item.model) && (
                   <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>

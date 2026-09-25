@@ -2,39 +2,42 @@
   "expo": {
     "name": "Combustível — Calculadora e Controle",
     "slug": "combustivel-calculadora-controle",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#0E7C3A"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.estanislau.combustivelcalculadora",
-      "versionCode": 1,
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0E7C3A"
+        "backgroundColor": "#F8F8F3"
       },
       "permissions": [
         "com.google.android.gms.permission.AD_ID"
       ]
     },
-    "plugins": [
-      [
-        "react-native-google-mobile-ads",
-        {
-          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
-          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
-        }
-      ]
-    ],
+   "plugins": [
+    [
+    "expo-splash-screen",
+    {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8F8F3"
+    }
+  ],
+  [
+    "react-native-google-mobile-ads",
+    {
+      "androidAppId": "ca-app-pub-3001919511565214~8321437558",
+      "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+    }
+  ]
+],
     "extra": {
       "eas": {
         "projectId": "2dabd0de-7848-443b-a017-72038f488836"

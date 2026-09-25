@@ -38,6 +38,7 @@ export function Button({
     <ActivityIndicator color={textColor} />
   ) : (
     <Text
+      numberOfLines={1}
       style={[
         styles.label,
         { color: isDisabled ? theme.colors.textSecondary : textColor },
