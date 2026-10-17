@@ -15,6 +15,14 @@ export interface FuelComparisonResult {
   percentageDifference: number;
   /** Economia estimada a cada 100 km, sempre >= 0 */
   savingsPer100Km: number;
+  /** Preço do etanol ÷ preço da gasolina (0.68 = etanol custa 68% da gasolina). */
+  priceRatio: number;
+  /**
+   * Limite de preço (em relação à gasolina) até o qual o etanol compensa NESTE
+   * carro: consumo do etanol ÷ consumo da gasolina. É a versão personalizada
+   * da "regra dos 70%".
+   */
+  breakEvenRatio: number;
 }
 
 function assertValidOption(option: FuelOption, label: string): void {
@@ -65,5 +73,7 @@ export function compareFuelTypes(gasoline: FuelOption, ethanol: FuelOption): Fue
     cheaperOption,
     percentageDifference,
     savingsPer100Km,
+    priceRatio: ethanol.pricePerLiter / gasoline.pricePerLiter,
+    breakEvenRatio: ethanol.consumptionKmPerLiter / gasoline.consumptionKmPerLiter,
   };
 }

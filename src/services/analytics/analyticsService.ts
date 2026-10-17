@@ -32,6 +32,9 @@ export const AnalyticsEvents = {
   CONSUMPTION_CALCULATED: 'consumption_calculated',
   REFUELING_CREATED: 'refueling_created',
   STATISTICS_VIEWED: 'statistics_viewed',
+  UPDATE_PROMPT_SHOWN: 'update_prompt_shown',
+  UPDATE_ACCEPTED: 'update_accepted',
+  UPDATE_DISMISSED: 'update_dismissed',
 } as const;
 
 export type AnalyticsEventName = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];

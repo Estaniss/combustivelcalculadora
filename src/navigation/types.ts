@@ -11,6 +11,7 @@ export type RootStackParamList = {
   RefuelingHistory: undefined;
   Statistics: undefined;
   TripHistory: undefined;
+  ComparisonHistory: undefined;
 };
 
 declare global {

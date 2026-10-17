@@ -147,3 +147,19 @@ Veja a seção "Como transformar este template em um NOVO aplicativo" no
 README do template (`../app-template/README.md`). O processo é o mesmo:
 duplicar o template, criar `features/<nova-feature>` seguindo o padrão
 `services/` (lógica pura) + `screens/`, e trocar `app.config.ts`.
+
+## Verificação de atualização
+
+Ao abrir, o app baixa o `version.json` da raiz deste repositório (URL em
+`src/config/updates.config.ts`) e compara com a versão instalada
+(`expo.version` do `app.json`):
+
+- `latestVersion` maior que a instalada → aviso **opcional** ("Atualizar agora" / "Agora não"),
+  mostrado uma vez por versão.
+- instalada menor que `minSupportedVersion` → aviso **obrigatório** (sem botão de fechar).
+- sem internet, timeout (6 s) ou JSON inválido → nada acontece; o app nunca trava por isso.
+
+**Fluxo de release:** publique a nova versão na Google Play **primeiro**; só depois
+atualize `version.json` (`latestVersion`) e faça push na `main`. Subir o JSON antes
+faz os usuários verem "atualização disponível" antes de ela existir na loja.
+O botão sempre leva à página do app na Play Store (nunca a um APK externo).
