@@ -10,7 +10,7 @@ import { Button } from '@components/Button';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 import { vehicleRepository } from '../services/vehicleRepository';
 import { Vehicle, FuelType, VEHICLE_ICONS, VehicleIcon } from '@/domain/vehicle';
-import { parseLocaleNumber } from '@utils/format';
+import { INPUT_LIMITS, validateNumber } from '@utils/validation';
 import { RootStackParamList } from '@/navigation/types';
 import { Autocomplete } from '@components/Autocomplete';
 import { CAR_BRANDS } from '@/constants/carBrands';
@@ -37,7 +37,10 @@ export function VehicleFormScreen() {
   const [model, setModel] = useState('');
   const [year, setYear] = useState('');
   const [fuelType, setFuelType] = useState<FuelType>('flex');
+  const [gasolineConsumption, setGasolineConsumption] = useState('');
+  const [ethanolConsumption, setEthanolConsumption] = useState('');
   const [averageConsumption, setAverageConsumption] = useState('');
+  const [tankCapacity, setTankCapacity] = useState('');
   const [icon, setIcon] = useState<VehicleIcon>(VEHICLE_ICONS[0]);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +54,18 @@ export function VehicleFormScreen() {
       setModel(vehicle.model ?? '');
       setYear(vehicle.year ? String(vehicle.year) : '');
       setFuelType(vehicle.fuelType);
-      setAverageConsumption(vehicle.averageConsumption ? String(vehicle.averageConsumption) : '');
+      setGasolineConsumption(
+        vehicle.gasolineConsumption ? String(vehicle.gasolineConsumption).replace('.', ',') : '',
+      );
+      setEthanolConsumption(
+        vehicle.ethanolConsumption ? String(vehicle.ethanolConsumption).replace('.', ',') : '',
+      );
+      setAverageConsumption(
+        vehicle.averageConsumption ? String(vehicle.averageConsumption).replace('.', ',') : '',
+      );
+      setTankCapacity(
+        vehicle.tankCapacityLiters ? String(vehicle.tankCapacityLiters).replace('.', ',') : '',
+      );
       setIcon(vehicle.icon ?? VEHICLE_ICONS[0]);
     });
   }, [vehicleId]);
@@ -61,6 +75,32 @@ export function VehicleFormScreen() {
       setError('Informe um nome para o veículo.');
       return;
     }
+
+    // Campos opcionais: só validam se foram preenchidos.
+    const optional = (raw: string, label: string, max: number) => {
+      if (raw.trim() === '') return { ok: true as const, value: undefined };
+      return validateNumber(raw, label, { max });
+    };
+    const checks = [
+      optional(gasolineConsumption, 'o consumo com gasolina', INPUT_LIMITS.consumptionKmPerLiter),
+      optional(ethanolConsumption, 'o consumo com etanol', INPUT_LIMITS.consumptionKmPerLiter),
+      optional(averageConsumption, 'o consumo médio', INPUT_LIMITS.consumptionKmPerLiter),
+      optional(tankCapacity, 'a capacidade do tanque', INPUT_LIMITS.tankLiters),
+    ];
+    const firstError = checks.find((c) => !c.ok);
+    if (firstError && !firstError.ok) {
+      setError(firstError.error);
+      return;
+    }
+    const [gasolineValue, ethanolValue, averageValue, tankValue] = checks.map((c) =>
+      c.ok ? c.value : undefined,
+    );
+
+    // Só guarda os consumos que fazem sentido para o combustível do veículo.
+    const usesGasoline = fuelType === 'flex' || fuelType === 'gasoline';
+    const usesEthanol = fuelType === 'flex' || fuelType === 'ethanol';
+    const savedGasoline = usesGasoline ? gasolineValue : undefined;
+    const savedEthanol = usesEthanol ? ethanolValue : undefined;
     setError(null);
 
     const input = {
@@ -69,7 +109,11 @@ export function VehicleFormScreen() {
       model: model.trim() || undefined,
       year: year ? Number(year) : undefined,
       fuelType,
-      averageConsumption: averageConsumption ? parseLocaleNumber(averageConsumption) : undefined,
+      gasolineConsumption: savedGasoline,
+      ethanolConsumption: savedEthanol,
+      tankCapacityLiters: tankValue,
+      // "consumo médio" exibido na Home/lista: o específico quando existir
+      averageConsumption: fuelType === 'diesel' ? averageValue : (savedGasoline ?? savedEthanol),
       icon,
     };
 
@@ -159,12 +203,39 @@ export function VehicleFormScreen() {
           ))}
         </View>
 
+        {(fuelType === 'flex' || fuelType === 'gasoline') && (
+          <Input
+            label="Consumo com gasolina em km/L (opcional)"
+            keyboard="decimal"
+            value={gasolineConsumption}
+            onChangeText={setGasolineConsumption}
+            placeholder="Ex: 12"
+          />
+        )}
+        {(fuelType === 'flex' || fuelType === 'ethanol') && (
+          <Input
+            label="Consumo com etanol em km/L (opcional)"
+            keyboard="decimal"
+            value={ethanolConsumption}
+            onChangeText={setEthanolConsumption}
+            placeholder="Ex: 8,5"
+          />
+        )}
+        {fuelType === 'diesel' && (
+          <Input
+            label="Consumo médio em km/L (opcional)"
+            keyboard="decimal"
+            value={averageConsumption}
+            onChangeText={setAverageConsumption}
+            placeholder="Ex: 11,8"
+          />
+        )}
         <Input
-          label="Consumo médio em km/L (opcional)"
+          label="Capacidade do tanque em litros (opcional)"
           keyboard="decimal"
-          value={averageConsumption}
-          onChangeText={setAverageConsumption}
-          placeholder="Ex: 11,8"
+          value={tankCapacity}
+          onChangeText={setTankCapacity}
+          placeholder="Ex: 50"
         />
 
         {error ? (

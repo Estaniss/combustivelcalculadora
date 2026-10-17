@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '@theme/index';
 import { AppNavigator } from '@/navigation/AppNavigator';
+import { UpdateGate } from '@components/UpdateModal';
 import { initializeAds } from '@services/ads/adsService';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 
@@ -43,6 +44,7 @@ export default function App() {
         <ThemeProvider>
           <StatusBar style="auto" />
           <AppNavigator />
+          <UpdateGate />
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
