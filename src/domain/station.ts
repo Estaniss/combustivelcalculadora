@@ -3,6 +3,8 @@ export interface Station {
   id: string;
   name: string;
   address?: string;
+  /** Bandeira (Shell, Ipiranga…), quando a fonte informa. */
+  brand?: string;
   latitude: number;
   longitude: number;
   /** Nota média (0–5), quando a fonte informa. */

@@ -1,4 +1,4 @@
-import { formatPercent, parseLocaleNumber } from '../format';
+import { formatDuration, formatPercent, parseLocaleNumber } from '../format';
 
 describe('parseLocaleNumber', () => {
   it.each([
@@ -30,5 +30,18 @@ describe('formatPercent', () => {
   it('formata razão como porcentagem pt-BR', () => {
     expect(formatPercent(0.6774)).toBe('67,7%');
     expect(formatPercent(0.7, 0)).toBe('70%');
+  });
+});
+
+describe('formatDuration', () => {
+  it.each([
+    [0, '00:00:00'],
+    [999, '00:00:00'],
+    [65_000, '00:01:05'],
+    [3_725_000, '01:02:05'],
+    [360_000_000, '100:00:00'],
+    [-5000, '00:00:00'],
+  ])('%d ms -> %s', (ms, expected) => {
+    expect(formatDuration(ms)).toBe(expected);
   });
 });

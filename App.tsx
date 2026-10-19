@@ -6,12 +6,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '@theme/index';
 import { AppNavigator } from '@/navigation/AppNavigator';
 import { UpdateGate } from '@components/UpdateModal';
+import '@features/trip-mode/services/locationTask';
 import { initializeAds } from '@services/ads/adsService';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 
-SplashScreen.preventAutoHideAsync().catch(() => {
-  /* ignora se já estiver escondida */
-});
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);

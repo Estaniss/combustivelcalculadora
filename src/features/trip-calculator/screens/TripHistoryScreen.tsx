@@ -52,11 +52,15 @@ export function TripHistoryScreen() {
                 <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
                   {formatDate(item.createdAt)}
                 </Text>
-                {item.roundTrip && (
+                {item.source === 'gps' ? (
+                  <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
+                    Medida por GPS
+                  </Text>
+                ) : item.roundTrip ? (
                   <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
                     Ida e volta
                   </Text>
-                )}
+                ) : null}
               </View>
               <Text style={[theme.typography.body, { color: theme.colors.text, marginTop: 4 }]}>
                 {formatKm(item.totalDistanceKm)} · {item.requiredLiters.toFixed(1)} L

@@ -10,6 +10,8 @@ export interface Trip {
   totalCost: number;
   costPerKm: number;
   costPerPerson?: number;
+  /** Como a viagem foi registrada: calculada à mão ou medida por GPS. */
+  source?: 'manual' | 'gps';
   createdAt: string;
 }
 

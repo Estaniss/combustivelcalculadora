@@ -36,6 +36,13 @@
       "androidAppId": "ca-app-pub-3001919511565214~8321437558",
       "iosAppId": "ca-app-pub-3940256099942544~1458002511"
     }
+  ],
+  [
+    "expo-location",
+    {
+      "locationWhenInUsePermission": "O Combustível usa sua localização para medir a distância da viagem e mostrar postos próximos.",
+      "isAndroidForegroundServiceEnabled": true
+    }
   ]
 ],
     "extra": {
