@@ -17,6 +17,8 @@ import { StatisticsScreen } from '@features/statistics/screens/StatisticsScreen'
 import { appConfig } from '@config/app.config';
 import { storageService, StorageKeys } from '@services/storage/storageService';
 import { Loading } from '@components/Loading';
+import { TripModeScreen } from '@features/trip-mode/screens/TripModeScreen';
+import { StationsMapScreen } from '@features/stations/screens/StationsMapScreen';
 import { ComparisonHistoryScreen } from '@features/fuel-comparison/screens/ComparisonHistoryScreen';
 import { TripHistoryScreen } from '@/features/trip-calculator/screens/TripHistoryScreen';
 
@@ -63,6 +65,8 @@ export function AppNavigator() {
         <Stack.Screen name="Statistics" component={StatisticsScreen} />
         <Stack.Screen name="TripHistory" component={TripHistoryScreen} />
         <Stack.Screen name="ComparisonHistory" component={ComparisonHistoryScreen} />
+        <Stack.Screen name="TripMode" component={TripModeScreen} />
+        <Stack.Screen name="StationsMap" component={StationsMapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

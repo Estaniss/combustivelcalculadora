@@ -46,6 +46,15 @@ export function formatPercent(ratio: number, maximumFractionDigits = 1): string 
   return `${formatNumber(ratio * 100, maximumFractionDigits)}%`;
 }
 
+/** 3725000 ms -> "01:02:05". */
+export function formatDuration(ms: number): string {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const pad = (value: number) => String(value).padStart(2, '0');
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  return `${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
+}
+
 export function formatDate(isoDate: string): string {
   return dateFormatter.format(new Date(isoDate));
 }

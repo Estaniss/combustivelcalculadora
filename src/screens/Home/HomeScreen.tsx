@@ -24,6 +24,8 @@ const QUICK_ACTIONS: { label: string; route: keyof RootStackParamList; emoji: st
   { label: 'Gasolina\nx Etanol', route: 'FuelComparison', emoji: '⚖️' },
   { label: 'Meu\nconsumo', route: 'Consumption', emoji: '📊' },
   { label: 'Abastecer', route: 'RefuelingForm', emoji: '⛽' },
+  { label: 'Modo\nviagem', route: 'TripMode', emoji: '🧭' },
+  { label: 'Postos\nperto', route: 'StationsMap', emoji: '📍' },
 ];
 
 export function HomeScreen() {

@@ -18,6 +18,8 @@ export const StorageKeys = {
   SELECTED_VEHICLE_ID: '@combustivel/selected_vehicle_id',
   TRIPS: '@combustivel/trips',
   COMPARISONS: '@combustivel/comparisons',
+  ACTIVE_TRIP_SESSION: '@combustivel/active_trip_session',
+  TRIP_DISCLOSURE_ACCEPTED: '@combustivel/trip_disclosure_accepted',
   UPDATE_DISMISSED_VERSION: '@app/update_dismissed_version',
 } as const;
 

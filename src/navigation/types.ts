@@ -12,6 +12,8 @@ export type RootStackParamList = {
   Statistics: undefined;
   TripHistory: undefined;
   ComparisonHistory: undefined;
+  TripMode: undefined;
+  StationsMap: undefined;
 };
 
 declare global {
