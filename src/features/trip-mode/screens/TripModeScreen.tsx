@@ -3,7 +3,7 @@ import { Alert, Linking, Modal, ScrollView, StyleSheet, Text, View } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Button } from '@components/Button';
 import { Card } from '@components/Card';
@@ -61,7 +61,7 @@ function Stat({ label, value, large }: { label: string; value: string; large?: b
       <Text
         style={[
           large ? theme.typography.result : theme.typography.subtitle,
-          { color: theme.colors.text, fontVariant: ['tabular-nums'], fontWeight: '700' },
+          { color: theme.colors.text, fontVariant: ['tabular-nums'], fontFamily: fonts.semibold },
         ]}
       >
         {value}
@@ -254,7 +254,7 @@ export function TripModeScreen() {
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Modo Viagem" showBack />
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.md }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.md }}
         keyboardShouldPersistTaps="handled"
       >
         {/* ---------- VIAGEM EM ANDAMENTO ---------- */}
@@ -263,7 +263,10 @@ export function TripModeScreen() {
             <Card style={{ gap: theme.spacing.md }}>
               <Text
                 accessibilityRole="header"
-                style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}
+                style={[
+                  theme.typography.subtitle,
+                  { color: theme.colors.text, fontFamily: fonts.semibold },
+                ]}
               >
                 Viagem em andamento · {FUEL_LABEL[session.setup.fuel]}
               </Text>
@@ -282,7 +285,10 @@ export function TripModeScreen() {
                 style={{ borderColor: theme.colors.warning, borderWidth: 1 }}
               >
                 <Text
-                  style={[theme.typography.body, { color: theme.colors.text, fontWeight: '600' }]}
+                  style={[
+                    theme.typography.body,
+                    { color: theme.colors.text, fontFamily: fonts.semibold },
+                  ]}
                 >
                   GPS sem sinal
                 </Text>
@@ -297,7 +303,7 @@ export function TripModeScreen() {
                     : 'O rastreio foi interrompido pelo sistema. Retome para continuar medindo.'}
                 </Text>
                 {!trackingRunning && (
-                  <View style={{ marginTop: theme.spacing.sm }}>
+                  <View style={{ marginTop: theme.spacing.xs }}>
                     <Button
                       label="Retomar rastreio"
                       variant="outline"
@@ -327,7 +333,10 @@ export function TripModeScreen() {
             <Card style={{ gap: theme.spacing.md }}>
               <Text
                 accessibilityRole="header"
-                style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}
+                style={[
+                  theme.typography.subtitle,
+                  { color: theme.colors.text, fontFamily: fonts.semibold },
+                ]}
               >
                 Resumo da viagem
               </Text>
@@ -345,7 +354,10 @@ export function TripModeScreen() {
                 />
               </View>
               <Text
-                style={[theme.typography.body, { color: theme.colors.primary, fontWeight: '600' }]}
+                style={[
+                  theme.typography.body,
+                  { color: theme.colors.primary, fontFamily: fonts.semibold },
+                ]}
               >
                 {describeTripSavings(summary.data)}
               </Text>
@@ -378,7 +390,7 @@ export function TripModeScreen() {
             <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
               COMBUSTÍVEL USADO
             </Text>
-            <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+            <View style={{ flexDirection: 'row', gap: theme.spacing.xs }}>
               {(['gasoline', 'ethanol'] as const).map((option) => (
                 <View key={option} style={{ flex: 1 }}>
                   <Button
@@ -455,9 +467,9 @@ export function TripModeScreen() {
               theme.shadow.md,
               {
                 backgroundColor: theme.colors.surface,
-                borderRadius: theme.borderRadius.lg,
-                padding: theme.spacing.lg,
-                gap: theme.spacing.sm,
+                borderRadius: theme.borderRadius.xxl,
+                padding: theme.spacing.xl,
+                gap: theme.spacing.xs,
               },
             ]}
           >
@@ -475,7 +487,7 @@ export function TripModeScreen() {
               O trajeto não é enviado para ninguém nem fica guardado: o app só mantém a distância
               total.
             </Text>
-            <View style={{ marginTop: theme.spacing.sm, gap: theme.spacing.sm }}>
+            <View style={{ marginTop: theme.spacing.xs, gap: theme.spacing.xs }}>
               <Button label="Continuar" onPress={handleDisclosureAccept} />
               <Button label="Agora não" variant="outline" onPress={() => setPendingSetup(null)} />
             </View>

@@ -28,7 +28,7 @@ export function ComparisonBars({
   ];
 
   return (
-    <View style={{ gap: theme.spacing.sm, width: '100%' }}>
+    <View style={{ gap: theme.spacing.xs, width: '100%' }}>
       {rows.map((row) => {
         const isWinner = winner === row.key;
         return (

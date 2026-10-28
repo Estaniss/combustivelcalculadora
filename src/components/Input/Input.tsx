@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native';
 import { useTheme } from '@theme/index';
 
@@ -16,37 +16,70 @@ const keyboardMap: Record<InputKeyboard, TextInputProps['keyboardType']> = {
   decimal: 'decimal-pad',
 };
 
-export function Input({ label, error, keyboard = 'default', ...textInputProps }: InputProps) {
+/**
+ * Campo de texto (DESIGN.md): borda de 1 px que atende 3:1 de contraste; foco
+ * em 2 px na cor da marca; erro em vermelho com mensagem anunciada ao leitor de tela.
+ */
+export function Input({
+  label,
+  error,
+  keyboard = 'default',
+  onFocus,
+  onBlur,
+  ...textInputProps
+}: InputProps) {
   const theme = useTheme();
+  const [focused, setFocused] = useState(false);
+
+  const borderColor = error
+    ? theme.colors.error
+    : focused
+      ? theme.colors.primary
+      : theme.colors.inputBorder;
+  const borderWidth = focused || error ? 2 : 1;
 
   return (
     <View style={styles.container}>
       {label ? (
         <Text
-          style={[styles.label, { color: theme.colors.textSecondary }, theme.typography.caption]}
+          style={[theme.typography.caption, styles.label, { color: theme.colors.textSecondary }]}
         >
           {label}
         </Text>
       ) : null}
       <TextInput
         accessibilityLabel={label}
-        placeholderTextColor={theme.colors.textSecondary}
+        placeholderTextColor={theme.colors.textMuted}
+        selectionColor={theme.colors.primary}
         keyboardType={keyboardMap[keyboard]}
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          onBlur?.(event);
+        }}
         style={[
           styles.input,
           theme.typography.body,
           {
             color: theme.colors.text,
             backgroundColor: theme.colors.surface,
-            borderColor: error ? theme.colors.error : theme.colors.border,
+            borderColor,
+            borderWidth,
             borderRadius: theme.borderRadius.md,
-            paddingHorizontal: theme.spacing.md,
+            // o foco engrossa a borda para dentro: o campo não "pula" de tamanho
+            paddingHorizontal: theme.spacing.md - (borderWidth - 1),
           },
         ]}
         {...textInputProps}
       />
       {error ? (
-        <Text style={[styles.error, { color: theme.colors.error }, theme.typography.caption]}>
+        <Text
+          accessibilityLiveRegion="polite"
+          style={[theme.typography.caption, styles.error, { color: theme.colors.error }]}
+        >
           {error}
         </Text>
       ) : null}
@@ -55,17 +88,8 @@ export function Input({ label, error, keyboard = 'default', ...textInputProps }:
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  label: {
-    marginBottom: 6,
-  },
-  input: {
-    minHeight: 48,
-    borderWidth: 1,
-  },
-  error: {
-    marginTop: 4,
-  },
+  container: { width: '100%' },
+  label: { marginBottom: 6 },
+  input: { minHeight: 48 },
+  error: { marginTop: 4 },
 });

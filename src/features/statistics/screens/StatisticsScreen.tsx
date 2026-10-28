@@ -38,11 +38,12 @@ export function StatisticsScreen() {
       <Header title="Estatísticas" showBack />
       {!stats || stats.refuelingCount === 0 ? (
         <EmptyState
+          illustration="gauge"
           title="Sem dados suficientes"
           description="Registre alguns abastecimentos para ver suas estatísticas do mês."
         />
       ) : (
-        <ScrollView contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}>
+        <ScrollView contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}>
           <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
             ESTE MÊS
           </Text>

@@ -46,7 +46,7 @@ export function ConsumptionScreen() {
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Meu consumo" showBack />
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
         keyboardShouldPersistTaps="handled"
       >
         <Input
@@ -81,7 +81,7 @@ export function ConsumptionScreen() {
         </View>
 
         {result ? (
-          <View style={{ gap: theme.spacing.sm, marginTop: theme.spacing.lg }}>
+          <View style={{ gap: theme.spacing.xs, marginTop: theme.spacing.xl }}>
             <ResultCard label="Distância percorrida" value={formatKm(result.distanceKm)} />
             <ResultCard label="Consumo" value={formatKmPerLiter(result.consumptionKmPerLiter)} />
             {result.refuelingCost !== undefined && (

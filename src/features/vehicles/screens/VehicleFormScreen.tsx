@@ -129,11 +129,11 @@ export function VehicleFormScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title={vehicleId ? 'Editar carro' : 'Novo carro'} showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}>
+      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}>
         <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
           ÍCONE DO VEÍCULO
         </Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.xs }}>
           {VEHICLE_ICONS.map((opt) => (
             <Pressable
               key={opt}
@@ -143,7 +143,7 @@ export function VehicleFormScreen() {
               style={{
                 width: 56,
                 height: 56,
-                borderRadius: theme.borderRadius.md,
+                borderRadius: theme.borderRadius.lg,
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: theme.colors.surface,
@@ -186,12 +186,12 @@ export function VehicleFormScreen() {
         <Text
           style={[
             theme.typography.caption,
-            { color: theme.colors.textSecondary, marginTop: theme.spacing.sm },
+            { color: theme.colors.textSecondary, marginTop: theme.spacing.xs },
           ]}
         >
           COMBUSTÍVEL
         </Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.xs }}>
           {FUEL_OPTIONS.map((opt) => (
             <View key={opt.key} style={{ width: '47%' }}>
               <Button

@@ -1,3 +1,4 @@
+import { Illustration } from '@components/Illustration';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -36,21 +37,19 @@ export function OnboardingScreen({ onFinish }: { onFinish: () => void }) {
 
   return (
     <LinearGradient
-      colors={[theme.colors.primary, theme.colors.background]}
+      colors={[theme.colors.accentSoft, theme.colors.background]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      locations={[0, 0.55]}
+      locations={[0, 0.6]}
       style={styles.container}
     >
       <SafeAreaView style={styles.flex}>
-        <View style={[styles.content, { width, paddingHorizontal: theme.spacing.xl }]}>
-          <View style={[styles.emojiBadge, theme.shadow.md]}>
-            <Text style={styles.emoji}>{slide.emoji}</Text>
-          </View>
+        <View style={[styles.content, { width, paddingHorizontal: theme.spacing.xxl }]}>
+          <Illustration name={slide.illustration} size={176} />
           <Text
             style={[
               theme.typography.title,
-              { color: theme.colors.text, textAlign: 'center', marginTop: theme.spacing.lg },
+              { color: theme.colors.text, textAlign: 'center', marginTop: theme.spacing.xl },
             ]}
           >
             {slide.title}
@@ -61,7 +60,7 @@ export function OnboardingScreen({ onFinish }: { onFinish: () => void }) {
               {
                 color: theme.colors.textSecondary,
                 textAlign: 'center',
-                marginTop: theme.spacing.sm,
+                marginTop: theme.spacing.xs,
               },
             ]}
           >
@@ -69,7 +68,7 @@ export function OnboardingScreen({ onFinish }: { onFinish: () => void }) {
           </Text>
         </View>
 
-        <View style={[styles.dots, { marginBottom: theme.spacing.lg }]}>
+        <View style={[styles.dots, { marginBottom: theme.spacing.xl }]}>
           {onboardingSlides.map((_, i) => (
             <View
               key={i}
@@ -84,7 +83,7 @@ export function OnboardingScreen({ onFinish }: { onFinish: () => void }) {
           ))}
         </View>
 
-        <View style={{ paddingHorizontal: theme.spacing.xl, gap: theme.spacing.sm }}>
+        <View style={{ paddingHorizontal: theme.spacing.xxl, gap: theme.spacing.xs }}>
           <Button label={isLast ? 'Começar agora' : 'Próximo'} onPress={handleNext} />
           {!isLast && <Button label="Pular" variant="outline" onPress={handleSkip} />}
         </View>
@@ -105,17 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  emojiBadge: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emoji: {
-    fontSize: 56,
   },
   dots: {
     flexDirection: 'row',

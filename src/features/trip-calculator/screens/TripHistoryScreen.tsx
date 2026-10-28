@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Card } from '@components/Card';
 import { Button } from '@components/Button';
@@ -38,6 +38,7 @@ export function TripHistoryScreen() {
 
       {items.length === 0 ? (
         <EmptyState
+          illustration="route"
           title="Nenhuma viagem calculada ainda"
           description={'Os cálculos que você fizer em "Quanto vou gastar?" aparecem aqui.'}
         />
@@ -45,7 +46,7 @@ export function TripHistoryScreen() {
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+          contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
           renderItem={({ item }) => (
             <Card>
               <View style={styles.row}>
@@ -68,7 +69,7 @@ export function TripHistoryScreen() {
               <Text
                 style={[
                   theme.typography.subtitle,
-                  { color: theme.colors.primary, fontWeight: '700', marginTop: 4 },
+                  { color: theme.colors.primary, fontFamily: fonts.semibold, marginTop: 4 },
                 ]}
               >
                 {formatCurrency(item.totalCost)}
@@ -83,7 +84,7 @@ export function TripHistoryScreen() {
                   {formatCurrency(item.costPerPerson)} por pessoa ({item.numberOfPeople})
                 </Text>
               )}
-              <View style={{ marginTop: theme.spacing.sm }}>
+              <View style={{ marginTop: theme.spacing.xs }}>
                 <Button label="Excluir" variant="outline" onPress={() => handleDelete(item.id)} />
               </View>
             </Card>

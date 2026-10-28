@@ -1,9 +1,10 @@
+import { Icon } from '@components/Icon';
 import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Card } from '@components/Card';
 import { Button } from '@components/Button';
@@ -65,10 +66,11 @@ export function RefuelingHistoryScreen() {
       {items.length === 0 ? (
         <View style={styles.flex}>
           <EmptyState
+            illustration="pump"
             title="Nenhum abastecimento registrado"
             description="Registre seu primeiro abastecimento para começar a acompanhar seu consumo."
           />
-          <View style={{ paddingHorizontal: theme.spacing.lg }}>
+          <View style={{ paddingHorizontal: theme.spacing.xl }}>
             <Button label="+ Abastecer" onPress={() => navigation.navigate('RefuelingForm')} />
           </View>
         </View>
@@ -76,7 +78,7 @@ export function RefuelingHistoryScreen() {
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+          contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
           renderItem={({ item, index }) => {
             const consumption = getConsumptionFor(item, index);
             return (
@@ -90,14 +92,19 @@ export function RefuelingHistoryScreen() {
                   </Text>
                 </View>
                 {item.establishment ? (
-                  <Text
-                    style={[
-                      theme.typography.caption,
-                      { color: theme.colors.primary, fontWeight: '600', marginTop: 2 },
-                    ]}
+                  <View
+                    style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 }}
                   >
-                    📍 {item.establishment}
-                  </Text>
+                    <Icon name="map-pin" size={14} color={theme.colors.primary} />
+                    <Text
+                      style={[
+                        theme.typography.caption,
+                        { color: theme.colors.primary, fontFamily: fonts.semibold },
+                      ]}
+                    >
+                      {item.establishment}
+                    </Text>
+                  </View>
                 ) : null}
                 <Text style={[theme.typography.body, { color: theme.colors.text, marginTop: 4 }]}>
                   {item.liters.toFixed(1)} L · {formatCurrency(item.pricePerLiter)}/L
@@ -105,7 +112,7 @@ export function RefuelingHistoryScreen() {
                 <Text
                   style={[
                     theme.typography.subtitle,
-                    { color: theme.colors.primary, fontWeight: '700', marginTop: 4 },
+                    { color: theme.colors.primary, fontFamily: fonts.semibold, marginTop: 4 },
                   ]}
                 >
                   {formatCurrency(item.totalCost)}
@@ -123,8 +130,8 @@ export function RefuelingHistoryScreen() {
                 <View
                   style={{
                     flexDirection: 'row',
-                    gap: theme.spacing.sm,
-                    marginTop: theme.spacing.sm,
+                    gap: theme.spacing.xs,
+                    marginTop: theme.spacing.xs,
                   }}
                 >
                   <View style={{ flex: 1 }}>

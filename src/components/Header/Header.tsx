@@ -1,16 +1,25 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@theme/index';
+import { Icon } from '@components/Icon';
 
 export interface HeaderProps {
   title: string;
   showBack?: boolean;
   rightIcon?: React.ReactNode;
+  /** Texto lido pelo leitor de tela para o botão da direita (obrigatório se houver rightIcon). */
+  rightLabel?: string;
   onRightPress?: () => void;
 }
 
-export function Header({ title, showBack = false, rightIcon, onRightPress }: HeaderProps) {
+export function Header({
+  title,
+  showBack = false,
+  rightIcon,
+  rightLabel,
+  onRightPress,
+}: HeaderProps) {
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -18,11 +27,7 @@ export function Header({ title, showBack = false, rightIcon, onRightPress }: Hea
     <View
       style={[
         styles.container,
-        {
-          backgroundColor: theme.colors.background,
-          paddingHorizontal: theme.spacing.md,
-          shadowColor: '#000',
-        },
+        { backgroundColor: theme.colors.background, paddingHorizontal: theme.spacing.xs },
       ]}
     >
       <View style={styles.side}>
@@ -31,26 +36,32 @@ export function Header({ title, showBack = false, rightIcon, onRightPress }: Hea
             accessibilityRole="button"
             accessibilityLabel="Voltar"
             onPress={() => navigation.goBack()}
-            hitSlop={16}
-            style={({ pressed }) => [styles.backButton, pressed && { opacity: 0.6 }]}
+            style={({ pressed }) => [styles.touch, pressed && { opacity: 0.55 }]}
           >
-            <Text style={{ color: theme.colors.primary, fontSize: 24, fontWeight: '600' }}>
-              {'‹'}
-            </Text>
+            <Icon name="chevron-left" size={26} />
           </Pressable>
         ) : null}
       </View>
 
       <Text
+        accessibilityRole="header"
         numberOfLines={1}
-        style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}
+        style={[
+          theme.typography.subtitle,
+          { color: theme.colors.text, fontFamily: theme.typography.fonts.semibold },
+        ]}
       >
         {title}
       </Text>
 
       <View style={[styles.side, styles.sideRight]}>
         {rightIcon ? (
-          <Pressable accessibilityRole="button" onPress={onRightPress} hitSlop={12}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={rightLabel}
+            onPress={onRightPress}
+            style={({ pressed }) => [styles.touch, pressed && { opacity: 0.55 }]}
+          >
             {rightIcon}
           </Pressable>
         ) : null}
@@ -65,27 +76,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    ...Platform.select({
-      ios: {
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.06,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
   },
-  side: {
-    width: 40,
-  },
-  sideRight: {
-    alignItems: 'flex-end',
-  },
-  backButton: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  side: { width: 52 },
+  sideRight: { alignItems: 'flex-end' },
+  // área de toque de 44×44 (DESIGN.md / WCAG)
+  touch: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
 });

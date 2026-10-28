@@ -1,10 +1,12 @@
+import { Illustration, IllustrationName } from '@components/Illustration';
+import { Icon } from '@components/Icon';
 import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { appConfig } from '@config/app.config';
 import { Button } from '@components/Button';
 import { Card } from '@components/Card';
@@ -19,13 +21,17 @@ import { RootStackParamList } from '@/navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-const QUICK_ACTIONS: { label: string; route: keyof RootStackParamList; emoji: string }[] = [
-  { label: 'Quanto vou\ngastar?', route: 'TripCalculator', emoji: '🧮' },
-  { label: 'Gasolina\nx Etanol', route: 'FuelComparison', emoji: '⚖️' },
-  { label: 'Meu\nconsumo', route: 'Consumption', emoji: '📊' },
-  { label: 'Abastecer', route: 'RefuelingForm', emoji: '⛽' },
-  { label: 'Modo\nviagem', route: 'TripMode', emoji: '🧭' },
-  { label: 'Postos\nperto', route: 'StationsMap', emoji: '📍' },
+const QUICK_ACTIONS: {
+  label: string;
+  route: keyof RootStackParamList;
+  illustration: IllustrationName;
+}[] = [
+  { label: 'Quanto vou\ngastar?', route: 'TripCalculator', illustration: 'route' },
+  { label: 'Gasolina\nx Etanol', route: 'FuelComparison', illustration: 'drops' },
+  { label: 'Meu\nconsumo', route: 'Consumption', illustration: 'gauge' },
+  { label: 'Abastecer', route: 'RefuelingForm', illustration: 'pump' },
+  { label: 'Modo\nviagem', route: 'TripMode', illustration: 'trip' },
+  { label: 'Postos\nperto', route: 'StationsMap', illustration: 'station' },
 ];
 
 export function HomeScreen() {
@@ -52,7 +58,7 @@ export function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={[styles.topBar, { paddingHorizontal: theme.spacing.lg }]}>
+      <View style={[styles.topBar, { paddingHorizontal: theme.spacing.xl }]}>
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
@@ -73,33 +79,49 @@ export function HomeScreen() {
             { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
           ]}
         >
-          <Text style={{ fontSize: 18 }}>⚙️</Text>
+          <Icon name="sliders" size={20} />
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.lg }}>
+      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xl }}>
         {vehicle ? (
           <LinearGradient
             colors={[theme.colors.primary, theme.colors.secondary]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={[styles.hero, theme.shadow.md, { borderRadius: theme.borderRadius.lg }]}
+            style={[styles.hero, theme.shadow.md, { borderRadius: theme.borderRadius.xxl }]}
           >
             <Text style={styles.heroEmoji}>{vehicle.icon}</Text>
-            <Text style={[theme.typography.subtitle, styles.heroTitle]}>{vehicle.name}</Text>
+            <Text
+              style={[
+                theme.typography.subtitle,
+                styles.heroTitle,
+                { color: theme.colors.onPrimary },
+              ]}
+            >
+              {vehicle.name}
+            </Text>
             <View style={styles.heroStatsRow}>
               {vehicle.averageConsumption ? (
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatLabel}>Consumo médio</Text>
-                  <Text style={styles.heroStatValue}>
+                  <Text
+                    style={[styles.heroStatLabel, { color: theme.colors.onPrimary, opacity: 0.85 }]}
+                  >
+                    Consumo médio
+                  </Text>
+                  <Text style={[styles.heroStatValue, { color: theme.colors.onPrimary }]}>
                     {formatKmPerLiter(vehicle.averageConsumption)}
                   </Text>
                 </View>
               ) : null}
               {lastRefueling ? (
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatLabel}>Último abastecimento</Text>
-                  <Text style={styles.heroStatValue}>
+                  <Text
+                    style={[styles.heroStatLabel, { color: theme.colors.onPrimary, opacity: 0.85 }]}
+                  >
+                    Último abastecimento
+                  </Text>
+                  <Text style={[styles.heroStatValue, { color: theme.colors.onPrimary }]}>
                     {formatCurrency(lastRefueling.totalCost)}
                   </Text>
                 </View>
@@ -110,13 +132,18 @@ export function HomeScreen() {
               style={styles.heroLink}
               accessibilityRole="button"
             >
-              <Text style={styles.heroLinkText}>Meus carros ›</Text>
+              <Text style={[styles.heroLinkText, { color: theme.colors.onPrimary }]}>
+                Meus carros ›
+              </Text>
             </Pressable>
           </LinearGradient>
         ) : (
           <Card>
             <Text
-              style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}
+              style={[
+                theme.typography.subtitle,
+                { color: theme.colors.text, fontFamily: fonts.semibold },
+              ]}
             >
               Cadastre seu carro
             </Text>
@@ -129,7 +156,7 @@ export function HomeScreen() {
               Salve seu veículo para acompanhar consumo e gastos — ou use as calculadoras sem
               cadastro.
             </Text>
-            <View style={{ marginTop: theme.spacing.sm }}>
+            <View style={{ marginTop: theme.spacing.xs }}>
               <Button
                 label="Adicionar carro"
                 onPress={() => navigation.navigate('VehicleForm', {})}
@@ -142,7 +169,7 @@ export function HomeScreen() {
           <Text
             style={[
               theme.typography.caption,
-              { color: theme.colors.textSecondary, marginBottom: theme.spacing.sm },
+              { color: theme.colors.textSecondary, marginBottom: theme.spacing.xs },
             ]}
           >
             AÇÕES RÁPIDAS
@@ -157,16 +184,16 @@ export function HomeScreen() {
                   theme.shadow.sm,
                   {
                     backgroundColor: theme.colors.surface,
-                    borderRadius: theme.borderRadius.md,
+                    borderRadius: theme.borderRadius.lg,
                     opacity: pressed ? 0.85 : 1,
                   },
                 ]}
               >
-                <Text style={styles.actionEmoji}>{action.emoji}</Text>
+                <Illustration name={action.illustration} size={64} />
                 <Text
                   style={[
                     theme.typography.caption,
-                    { color: theme.colors.text, fontWeight: '600' },
+                    { color: theme.colors.text, fontFamily: fonts.semibold },
                   ]}
                 >
                   {action.label}
@@ -176,17 +203,19 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+        <View style={{ flexDirection: 'row', gap: theme.spacing.xs }}>
           <View style={{ flex: 1 }}>
             <Button
-              label="📜 Histórico"
+              label="Histórico"
+              icon="history"
               variant="outline"
               onPress={() => navigation.navigate('RefuelingHistory')}
             />
           </View>
           <View style={{ flex: 1 }}>
             <Button
-              label="📈 Estatísticas"
+              label="Estatísticas"
+              icon="chart"
               variant="outline"
               onPress={() => navigation.navigate('Statistics')}
             />
@@ -222,8 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
   },
   heroTitle: {
-    color: '#FFFFFF',
-    fontWeight: '700',
+    fontFamily: fonts.semibold,
     marginTop: 6,
   },
   heroStatsRow: {
@@ -233,13 +261,11 @@ const styles = StyleSheet.create({
   },
   heroStat: {},
   heroStatLabel: {
-    color: 'rgba(255,255,255,0.8)',
     fontSize: 12,
   },
   heroStatValue: {
-    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: fonts.semibold,
     marginTop: 2,
   },
   heroLink: {
@@ -247,8 +273,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   heroLinkText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     textDecorationLine: 'underline',
   },
   grid: {
@@ -262,8 +287,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     alignItems: 'center',
     gap: 6,
-  },
-  actionEmoji: {
-    fontSize: 28,
   },
 });
