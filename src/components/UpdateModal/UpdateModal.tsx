@@ -47,8 +47,8 @@ export function UpdateModal({
             theme.shadow.md,
             {
               backgroundColor: theme.colors.surface,
-              borderRadius: theme.borderRadius.lg,
-              padding: theme.spacing.lg,
+              borderRadius: theme.borderRadius.xxl,
+              padding: theme.spacing.xl,
               borderColor: theme.colors.border,
             },
           ]}
@@ -62,7 +62,7 @@ export function UpdateModal({
           <Text
             style={[
               theme.typography.body,
-              { color: theme.colors.textSecondary, marginTop: theme.spacing.sm },
+              { color: theme.colors.textSecondary, marginTop: theme.spacing.xs },
             ]}
           >
             {required
@@ -73,14 +73,14 @@ export function UpdateModal({
             <Text
               style={[
                 theme.typography.body,
-                { color: theme.colors.text, marginTop: theme.spacing.sm },
+                { color: theme.colors.text, marginTop: theme.spacing.xs },
               ]}
             >
               {message}
             </Text>
           ) : null}
 
-          <View style={{ marginTop: theme.spacing.lg, gap: theme.spacing.sm }}>
+          <View style={{ marginTop: theme.spacing.xl, gap: theme.spacing.xs }}>
             <Button label="Atualizar agora" onPress={onUpdate} />
             {!required && <Button label="Agora não" variant="outline" onPress={onDismiss} />}
           </View>

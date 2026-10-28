@@ -1,9 +1,10 @@
+import { Icon } from '@components/Icon';
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Input } from '@components/Input';
 import { MoneyInput } from '@components/MoneyInput';
@@ -135,11 +136,12 @@ export function FuelComparisonScreen() {
       <Header
         title="Gasolina x Etanol"
         showBack
-        rightIcon={<Text style={{ fontSize: 20 }}>📜</Text>}
+        rightIcon={<Icon name="history" size={22} />}
+        rightLabel="Últimas comparações"
         onRightPress={() => navigation.navigate('ComparisonHistory')}
       />
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
         keyboardShouldPersistTaps="handled"
       >
         {vehicleName ? (
@@ -204,10 +206,13 @@ export function FuelComparisonScreen() {
 
         {result && explanation ? (
           <FadeInView accessibilityLiveRegion="polite">
-            <Card style={{ marginTop: theme.spacing.lg, gap: theme.spacing.md }}>
+            <Card style={{ marginTop: theme.spacing.xl, gap: theme.spacing.md }}>
               <Text
                 accessibilityRole="header"
-                style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}
+                style={[
+                  theme.typography.subtitle,
+                  { color: theme.colors.text, fontFamily: fonts.semibold },
+                ]}
               >
                 {explanation.headline}
               </Text>
@@ -233,7 +238,7 @@ export function FuelComparisonScreen() {
                       key={line}
                       style={[
                         theme.typography.body,
-                        { color: theme.colors.primary, fontWeight: '600' },
+                        { color: theme.colors.primary, fontFamily: fonts.semibold },
                       ]}
                     >
                       {line}

@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Button } from '@components/Button';
 import { Card } from '@components/Card';
@@ -64,10 +64,11 @@ export function VehiclesScreen() {
       {vehicles.length === 0 ? (
         <View style={styles.flex}>
           <EmptyState
+            illustration="trip"
             title="Cadastre seu primeiro carro"
             description="Salve seu veículo para acompanhar consumo e gastos."
           />
-          <View style={{ paddingHorizontal: theme.spacing.lg }}>
+          <View style={{ paddingHorizontal: theme.spacing.xl }}>
             <Button
               label="Adicionar carro"
               onPress={() => navigation.navigate('VehicleForm', {})}
@@ -78,7 +79,7 @@ export function VehiclesScreen() {
         <FlatList
           data={vehicles}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+          contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
           renderItem={({ item }) => (
             <Pressable onPress={() => handleSelect(item)}>
               <Card
@@ -90,7 +91,7 @@ export function VehiclesScreen() {
                 <Text
                   style={[
                     theme.typography.subtitle,
-                    { color: theme.colors.text, fontWeight: '600' },
+                    { color: theme.colors.text, fontFamily: fonts.semibold },
                   ]}
                 >
                   {item.icon} {item.name}
@@ -113,8 +114,8 @@ export function VehiclesScreen() {
                 <View
                   style={{
                     flexDirection: 'row',
-                    gap: theme.spacing.sm,
-                    marginTop: theme.spacing.sm,
+                    gap: theme.spacing.xs,
+                    marginTop: theme.spacing.xs,
                   }}
                 >
                   <View style={{ flex: 1 }}>

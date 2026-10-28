@@ -63,7 +63,7 @@ export function Autocomplete({
             {
               backgroundColor: theme.colors.surface,
               borderColor: theme.colors.border,
-              borderRadius: theme.borderRadius.md,
+              borderRadius: theme.borderRadius.lg,
             },
             theme.shadow.sm,
           ]}

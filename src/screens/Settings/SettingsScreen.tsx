@@ -51,9 +51,9 @@ export function SettingsScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Configurações" showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.lg }}>
+      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl }}>
         <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>TEMA</Text>
-        <View style={{ flexDirection: 'row', gap: theme.spacing.sm, marginTop: theme.spacing.sm }}>
+        <View style={{ flexDirection: 'row', gap: theme.spacing.xs, marginTop: theme.spacing.xs }}>
           {THEME_OPTIONS.map((opt) => (
             <View key={opt.mode} style={{ flex: 1 }}>
               <Button
@@ -65,7 +65,7 @@ export function SettingsScreen() {
           ))}
         </View>
 
-        <View style={{ marginTop: theme.spacing.xl, gap: theme.spacing.sm }}>
+        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.xs }}>
           <Button label="Avaliar aplicativo" variant="outline" onPress={handleRate} />
           <Button label="Compartilhar aplicativo" variant="outline" onPress={handleShare} />
           <Button

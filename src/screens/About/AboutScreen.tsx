@@ -15,7 +15,7 @@ export function AboutScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Sobre" showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.lg }}>
+      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl }}>
         <Text style={[theme.typography.title, { color: theme.colors.text, fontSize: 22 }]}>
           {appConfig.appName}
         </Text>
@@ -26,12 +26,12 @@ export function AboutScreen() {
         </Text>
 
         <Text
-          style={[theme.typography.body, { color: theme.colors.text, marginTop: theme.spacing.lg }]}
+          style={[theme.typography.body, { color: theme.colors.text, marginTop: theme.spacing.xl }]}
         >
           {appConfig.appDescription}
         </Text>
 
-        <View style={{ marginTop: theme.spacing.lg }}>
+        <View style={{ marginTop: theme.spacing.xl }}>
           <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
             Desenvolvido por
           </Text>
@@ -40,7 +40,7 @@ export function AboutScreen() {
           </Text>
         </View>
 
-        <View style={{ marginTop: theme.spacing.xl, gap: theme.spacing.sm }}>
+        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.xs }}>
           <Button
             label="Política de Privacidade"
             variant="outline"

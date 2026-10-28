@@ -1,3 +1,4 @@
+import { Icon } from '@components/Icon';
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -75,11 +76,12 @@ export function TripCalculatorScreen() {
       <Header
         title="Quanto vou gastar?"
         showBack
-        rightIcon={<Text style={{ fontSize: 20 }}>📜</Text>}
+        rightIcon={<Icon name="history" size={22} />}
+        rightLabel="Histórico de viagens"
         onRightPress={() => navigation.navigate('TripHistory')}
       />
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
         keyboardShouldPersistTaps="handled"
       >
         <Input
@@ -97,7 +99,7 @@ export function TripCalculatorScreen() {
           placeholder="Ex: 12"
         />
         <MoneyInput label="Preço do combustível (R$/L)" value={price} onChangeValue={setPrice} />
-        <View style={[styles.row, { marginTop: theme.spacing.sm }]}>
+        <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Ida e volta</Text>
           <Switch value={roundTrip} onValueChange={setRoundTrip} />
         </View>
@@ -119,7 +121,7 @@ export function TripCalculatorScreen() {
         </View>
 
         {result ? (
-          <View style={{ gap: theme.spacing.sm, marginTop: theme.spacing.lg }}>
+          <View style={{ gap: theme.spacing.xs, marginTop: theme.spacing.xl }}>
             <ResultCard label="Distância total" value={formatKm(result.totalDistanceKm)} />
             <ResultCard
               label="Combustível necessário"

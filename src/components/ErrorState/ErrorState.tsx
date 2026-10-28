@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@theme/index';
 import { Button } from '@components/Button';
+import { Illustration } from '@components/Illustration';
 
 export interface ErrorStateProps {
   message?: string;
@@ -14,10 +15,11 @@ export function ErrorState({
 }: ErrorStateProps) {
   const theme = useTheme();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { padding: theme.spacing.xl, gap: theme.spacing.xs }]}>
+      <Illustration name="offline" size={112} />
       <Text
-        style={[theme.typography.body, { color: theme.colors.error, textAlign: 'center' }]}
         accessibilityRole="alert"
+        style={[theme.typography.body, { color: theme.colors.text, textAlign: 'center' }]}
       >
         {message}
       </Text>
@@ -31,9 +33,5 @@ export function ErrorState({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
+  container: { alignItems: 'center', justifyContent: 'center' },
 });

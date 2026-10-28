@@ -47,15 +47,15 @@ export const appConfig: AppConfig = {
   developerName: 'Estanis',
   contactEmail: 'estanislauthomas@gmail.com',
 
-  primaryColor: '#0E7C3A',
-  secondaryColor: '#F5A623',
+  primaryColor: '#1A4A6F', // azul-marinho do logo
+  secondaryColor: '#2B6A9A',
 
   showAbout: true,
   showSettings: true,
   showOnboarding: true,
 
   enableAnalytics: true,
-  enableAds: true, 
+  enableAds: true,
   enableBanner: true,
   enableInterstitial: true,
   enableRewarded: false,

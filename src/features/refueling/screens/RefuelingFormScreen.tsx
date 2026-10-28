@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { Header } from '@components/Header';
 import { Input } from '@components/Input';
 import { MoneyInput } from '@components/MoneyInput';
@@ -117,7 +117,7 @@ export function RefuelingFormScreen() {
     return (
       <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
         <Header title="Abastecer" showBack />
-        <View style={{ padding: theme.spacing.lg }}>
+        <View style={{ padding: theme.spacing.xl }}>
           <Text
             style={[
               theme.typography.body,
@@ -136,7 +136,7 @@ export function RefuelingFormScreen() {
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title={refuelingId ? 'Editar abastecimento' : 'Abastecer'} showBack />
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
         keyboardShouldPersistTaps="handled"
       >
         <Input
@@ -168,12 +168,12 @@ export function RefuelingFormScreen() {
         <Text
           style={[
             theme.typography.caption,
-            { color: theme.colors.textSecondary, marginTop: theme.spacing.sm },
+            { color: theme.colors.textSecondary, marginTop: theme.spacing.xs },
           ]}
         >
           COMBUSTÍVEL
         </Text>
-        <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+        <View style={{ flexDirection: 'row', gap: theme.spacing.xs }}>
           {FUEL_OPTIONS.map((opt) => (
             <View key={opt.key} style={{ flex: 1 }}>
               <Button
@@ -185,7 +185,7 @@ export function RefuelingFormScreen() {
           ))}
         </View>
 
-        <View style={[styles.row, { marginTop: theme.spacing.sm }]}>
+        <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Tanque cheio</Text>
           <Switch value={fullTank} onValueChange={setFullTank} />
         </View>
@@ -194,7 +194,11 @@ export function RefuelingFormScreen() {
           <Text
             style={[
               theme.typography.subtitle,
-              { color: theme.colors.primary, fontWeight: '700', marginTop: theme.spacing.sm },
+              {
+                color: theme.colors.primary,
+                fontFamily: fonts.semibold,
+                marginTop: theme.spacing.xs,
+              },
             ]}
           >
             Total: {formatCurrency(totalCost)}

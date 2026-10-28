@@ -1,10 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, FlatList, Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '@theme/index';
+import { useTheme, fonts } from '@theme/index';
 import { mapConfig } from '@config/map.config';
 import { Header } from '@components/Header';
 import { Button } from '@components/Button';
@@ -145,6 +154,7 @@ export function StationsMapScreen() {
       <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
         <Header title="Postos perto de você" showBack />
         <EmptyState
+          illustration={status === 'error' ? 'offline' : 'station'}
           title={
             status === 'error'
               ? 'Não foi possível buscar os postos'
@@ -156,10 +166,14 @@ export function StationsMapScreen() {
               : 'Ela é usada só nesta tela, para mostrar os postos mais próximos.'
           }
         />
-        <View style={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}>
+        <View style={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}>
           <Button label="Tentar de novo" onPress={load} />
           {blocked && (
-            <Button label="Abrir configurações do app" variant="outline" onPress={() => Linking.openSettings()} />
+            <Button
+              label="Abrir configurações do app"
+              variant="outline"
+              onPress={() => Linking.openSettings()}
+            />
           )}
         </View>
       </SafeAreaView>
@@ -197,29 +211,45 @@ export function StationsMapScreen() {
       <FlatList
         data={stations}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ padding: theme.spacing.lg, gap: theme.spacing.sm }}
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
         ListHeaderComponent={
           selected && links ? (
-            <Card style={{ gap: theme.spacing.sm, marginBottom: theme.spacing.sm }}>
-              <Text accessibilityRole="header" style={[theme.typography.subtitle, { color: theme.colors.text, fontWeight: '700' }]}>
+            <Card style={{ gap: theme.spacing.xs, marginBottom: theme.spacing.xs }}>
+              <Text
+                accessibilityRole="header"
+                style={[
+                  theme.typography.subtitle,
+                  { color: theme.colors.text, fontFamily: fonts.semibold },
+                ]}
+              >
                 {selected.name}
               </Text>
               {selected.address ? (
-                <Text style={[theme.typography.body, { color: theme.colors.textSecondary }]}>{selected.address}</Text>
+                <Text style={[theme.typography.body, { color: theme.colors.textSecondary }]}>
+                  {selected.address}
+                </Text>
               ) : null}
               <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
                 {formatDistance(selected.distanceMeters)} · {openStatusLabel(selected.openNow)}
               </Text>
-              <View style={{ flexDirection: 'row', gap: theme.spacing.sm, flexWrap: 'wrap' }}>
+              <View style={{ flexDirection: 'row', gap: theme.spacing.xs, flexWrap: 'wrap' }}>
                 <View style={{ flex: 1, minWidth: 120 }}>
                   <Button label="Google Maps" onPress={() => openDirections(links.googleMaps)} />
                 </View>
                 <View style={{ flex: 1, minWidth: 120 }}>
-                  <Button label="Waze" variant="outline" onPress={() => openDirections(links.waze)} />
+                  <Button
+                    label="Waze"
+                    variant="outline"
+                    onPress={() => openDirections(links.waze)}
+                  />
                 </View>
                 {Platform.OS === 'ios' && (
                   <View style={{ flex: 1, minWidth: 120 }}>
-                    <Button label="Apple Maps" variant="outline" onPress={() => openDirections(links.appleMaps)} />
+                    <Button
+                      label="Apple Maps"
+                      variant="outline"
+                      onPress={() => openDirections(links.appleMaps)}
+                    />
                   </View>
                 )}
               </View>
@@ -237,15 +267,24 @@ export function StationsMapScreen() {
               {
                 backgroundColor: theme.colors.surface,
                 borderColor: item.id === selectedId ? theme.colors.primary : theme.colors.border,
-                borderRadius: theme.borderRadius.md,
+                borderRadius: theme.borderRadius.lg,
               },
             ]}
           >
             <View style={{ flex: 1 }}>
-              <Text numberOfLines={1} style={[theme.typography.body, { color: theme.colors.text, fontWeight: '600' }]}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  theme.typography.body,
+                  { color: theme.colors.text, fontFamily: fonts.semibold },
+                ]}
+              >
                 {item.name}
               </Text>
-              <Text numberOfLines={1} style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
+              <Text
+                numberOfLines={1}
+                style={[theme.typography.caption, { color: theme.colors.textSecondary }]}
+              >
                 {openStatusLabel(item.openNow)}
               </Text>
             </View>
@@ -256,12 +295,13 @@ export function StationsMapScreen() {
         )}
         ListEmptyComponent={
           <EmptyState
+            illustration="station"
             title="Nenhum posto encontrado"
             description="Não há postos cadastrados no OpenStreetMap num raio de 3 km."
           />
         }
         ListFooterComponent={
-          <View style={{ gap: theme.spacing.sm, marginTop: theme.spacing.sm }}>
+          <View style={{ gap: theme.spacing.xs, marginTop: theme.spacing.xs }}>
             <Button
               label="Atualizar"
               variant="outline"
@@ -271,7 +311,8 @@ export function StationsMapScreen() {
               }}
             />
             <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
-              Postos e horários vêm do OpenStreetMap, mantido por voluntários, e podem estar desatualizados. © colaboradores do OpenStreetMap.
+              Postos e horários vêm do OpenStreetMap, mantido por voluntários, e podem estar
+              desatualizados. © colaboradores do OpenStreetMap.
             </Text>
           </View>
         }
