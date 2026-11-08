@@ -1,7 +1,38 @@
 export type FuelType = 'gasoline' | 'ethanol' | 'flex' | 'diesel';
 
-export const VEHICLE_ICONS = ['🚗', '🚙', '🚐', '🛻', '🏍️', '🚕'] as const;
+/** Tipos de veículo que o usuário pode escolher (cada um tem um desenho em VehicleGlyph). */
+export const VEHICLE_ICONS = ['car', 'suv', 'van', 'pickup', 'moto', 'taxi'] as const;
 export type VehicleIcon = (typeof VEHICLE_ICONS)[number];
+
+/** Nome em português, usado por leitores de tela. */
+export const VEHICLE_ICON_LABELS: Record<VehicleIcon, string> = {
+  car: 'Carro',
+  suv: 'SUV',
+  van: 'Van',
+  pickup: 'Picape',
+  moto: 'Moto',
+  taxi: 'Táxi',
+};
+
+/** Versões anteriores guardavam um emoji; converte para o tipo atual. */
+const LEGACY_EMOJI: Record<string, VehicleIcon> = {
+  '🚗': 'car',
+  '🚙': 'suv',
+  '🚐': 'van',
+  '🛻': 'pickup',
+  '🏍️': 'moto',
+  '🚕': 'taxi',
+};
+
+/** Aceita qualquer valor salvo (inclusive emoji antigo ou lixo) e devolve um tipo válido. */
+export function normalizeVehicleIcon(value: unknown): VehicleIcon {
+  if (typeof value === 'string') {
+    if ((VEHICLE_ICONS as readonly string[]).includes(value)) return value as VehicleIcon;
+    const legacy = LEGACY_EMOJI[value];
+    if (legacy) return legacy;
+  }
+  return 'car';
+}
 
 export interface Vehicle {
   id: string;

@@ -55,9 +55,18 @@ async function remove(id: string): Promise<void> {
   await saveAll(items.filter((r) => r.id !== id));
 }
 
+/** Remove todos os abastecimentos de um veículo (usado ao excluir o veículo). */
+async function removeByVehicle(vehicleId: string): Promise<number> {
+  const items = await getAll();
+  const kept = items.filter((r) => r.vehicleId !== vehicleId);
+  if (kept.length !== items.length) await saveAll(kept);
+  return items.length - kept.length;
+}
+
 export const refuelingRepository = {
   getAll,
   getByVehicle,
+  removeByVehicle,
   create,
   update,
   remove,

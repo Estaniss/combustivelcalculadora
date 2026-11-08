@@ -116,11 +116,19 @@ const SVG: Record<IllustrationName, string> = {
 
 export const ILLUSTRATION_NAMES = Object.keys(SVG) as IllustrationName[];
 
-/** Troca os marcadores {{cor}} pela paleta. Falha alto se faltar alguma cor. */
-export function renderIllustration(name: IllustrationName, palette: IllustrationPalette): string {
-  return SVG[name].replace(/\{\{(\w+)\}\}/g, (_match, key: string) => {
+/** Troca os marcadores {{cor}} de qualquer SVG pela paleta. Falha alto se faltar alguma cor. */
+export function renderIllustrationMarkup(
+  markup: string,
+  palette: IllustrationPalette,
+  description = 'SVG',
+): string {
+  return markup.replace(/\{\{(\w+)\}\}/g, (_match, key: string) => {
     const color = (palette as unknown as Record<string, string | undefined>)[key];
-    if (!color) throw new Error(`Ilustração "${name}": cor "${key}" não definida na paleta`);
+    if (!color) throw new Error(`${description}: cor "${key}" não definida na paleta`);
     return color;
   });
+}
+
+export function renderIllustration(name: IllustrationName, palette: IllustrationPalette): string {
+  return renderIllustrationMarkup(SVG[name], palette, `Ilustração "${name}"`);
 }

@@ -1,3 +1,4 @@
+import { VehicleGlyph } from '../components/VehicleGlyph';
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +10,14 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { analyticsService, AnalyticsEvents } from '@services/analytics/analyticsService';
 import { vehicleRepository } from '../services/vehicleRepository';
-import { Vehicle, FuelType, VEHICLE_ICONS, VehicleIcon } from '@/domain/vehicle';
+import {
+  Vehicle,
+  FuelType,
+  VEHICLE_ICONS,
+  VEHICLE_ICON_LABELS,
+  VehicleIcon,
+  normalizeVehicleIcon,
+} from '@/domain/vehicle';
 import { INPUT_LIMITS, validateNumber } from '@utils/validation';
 import { RootStackParamList } from '@/navigation/types';
 import { Autocomplete } from '@components/Autocomplete';
@@ -66,7 +74,7 @@ export function VehicleFormScreen() {
       setTankCapacity(
         vehicle.tankCapacityLiters ? String(vehicle.tankCapacityLiters).replace('.', ',') : '',
       );
-      setIcon(vehicle.icon ?? VEHICLE_ICONS[0]);
+      setIcon(normalizeVehicleIcon(vehicle.icon));
     });
   }, [vehicleId]);
 
@@ -138,20 +146,18 @@ export function VehicleFormScreen() {
             <Pressable
               key={opt}
               onPress={() => setIcon(opt)}
-              accessibilityRole="button"
-              accessibilityLabel={`Ícone ${opt}`}
+              accessibilityRole="radio"
+              accessibilityLabel={VEHICLE_ICON_LABELS[opt]}
+              accessibilityState={{ checked: icon === opt }}
               style={{
-                width: 56,
-                height: 56,
+                padding: theme.spacing.xxs,
                 borderRadius: theme.borderRadius.lg,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: theme.colors.surface,
                 borderWidth: icon === opt ? 2 : 1,
                 borderColor: icon === opt ? theme.colors.primary : theme.colors.border,
+                backgroundColor: icon === opt ? theme.colors.accentSoft : theme.colors.surface,
               }}
             >
-              <Text style={{ fontSize: 26 }}>{opt}</Text>
+              <VehicleGlyph icon={opt} size={64} label={VEHICLE_ICON_LABELS[opt]} />
             </Pressable>
           ))}
         </View>
