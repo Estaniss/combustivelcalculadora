@@ -101,7 +101,13 @@ export function TripCalculatorScreen() {
         <MoneyInput label="Preço do combustível (R$/L)" value={price} onChangeValue={setPrice} />
         <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Ida e volta</Text>
-          <Switch value={roundTrip} onValueChange={setRoundTrip} />
+          <Switch
+            accessibilityRole="switch"
+            accessibilityLabel="Ida e volta"
+            accessibilityState={{ checked: roundTrip }}
+            value={roundTrip}
+            onValueChange={setRoundTrip}
+          />
         </View>
 
         <Input

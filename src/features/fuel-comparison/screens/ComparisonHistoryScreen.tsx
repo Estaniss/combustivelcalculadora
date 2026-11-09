@@ -55,6 +55,7 @@ export function ComparisonHistoryScreen() {
         />
       ) : (
         <FlatList
+          accessibilityLabel="Lista de comparações"
           data={items}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}

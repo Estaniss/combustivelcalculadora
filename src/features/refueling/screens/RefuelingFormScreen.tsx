@@ -187,7 +187,13 @@ export function RefuelingFormScreen() {
 
         <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Tanque cheio</Text>
-          <Switch value={fullTank} onValueChange={setFullTank} />
+          <Switch
+            accessibilityRole="switch"
+            accessibilityLabel="Tanque cheio"
+            accessibilityState={{ checked: fullTank }}
+            value={fullTank}
+            onValueChange={setFullTank}
+          />
         </View>
 
         {totalCost > 0 && (

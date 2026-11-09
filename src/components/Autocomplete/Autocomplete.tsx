@@ -70,6 +70,8 @@ export function Autocomplete({
         >
           {suggestions.map((item, index) => (
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={item}
               key={item}
               onPress={() => handleSelect(item)}
               style={({ pressed }) => [

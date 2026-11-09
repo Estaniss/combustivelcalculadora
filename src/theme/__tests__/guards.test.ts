@@ -48,3 +48,61 @@ describe('guardas de design', () => {
     expect(offenders.map((f) => path.relative(SRC, f))).toEqual([]);
   });
 });
+
+describe('guardas de acessibilidade', () => {
+  it('todo Switch tem accessibilityRole e accessibilityLabel', () => {
+    const switchPat = /<Switch\b([^/]*?)\/>/gs;
+    const offenders: string[] = [];
+    for (const f of files) {
+      if (!f.endsWith('.tsx')) continue;
+      const content = code(f);
+      for (const m of content.matchAll(switchPat)) {
+        const block = m[0] ?? '';
+        if (!block.includes('accessibilityRole') || !block.includes('accessibilityLabel')) {
+          offenders.push(path.relative(SRC, f));
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  it('todo Pressable tem accessibilityRole', () => {
+    /**
+     * Coleta o bloco de abertura de cada <Pressable respeitando chaves aninhadas
+     * (os atributos de estilo usam {{…}} que confundiriam um regex simples).
+     */
+    function openingTags(text: string): string[] {
+      const results: string[] = [];
+      // ignora ocorrências em contextos de tipo TypeScript (ex: Omit<PressableProps, ...>)
+      let idx = text.indexOf('<Pressable ');
+      while (idx !== -1) {
+        let depth = 0;
+        let i = idx;
+        while (i < text.length) {
+          if (text[i] === '{') depth++;
+          else if (text[i] === '}') depth--;
+          else if (text[i] === '>' && depth === 0) {
+            results.push(text.slice(idx, i + 1));
+            break;
+          }
+          i++;
+        }
+        idx = text.indexOf('<Pressable', idx + 1);
+      }
+      return results;
+    }
+
+    const offenders: string[] = [];
+    for (const f of files) {
+      if (!f.endsWith('.tsx')) continue;
+      const content = code(f);
+      for (const tag of openingTags(content)) {
+        if (!tag.includes('accessibilityRole')) {
+          offenders.push(path.relative(SRC, f));
+          break;
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});

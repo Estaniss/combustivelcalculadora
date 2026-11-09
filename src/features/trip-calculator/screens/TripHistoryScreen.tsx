@@ -44,6 +44,7 @@ export function TripHistoryScreen() {
         />
       ) : (
         <FlatList
+          accessibilityLabel="Histórico de viagens"
           data={items}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
