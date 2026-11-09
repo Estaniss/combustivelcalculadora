@@ -76,6 +76,7 @@ export function RefuelingHistoryScreen() {
         </View>
       ) : (
         <FlatList
+          accessibilityLabel="Histórico de abastecimentos"
           data={items}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}

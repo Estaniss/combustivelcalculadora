@@ -1,0 +1,211 @@
+diff --git a/package-lock.json b/package-lock.json
+index bcb7ad4..eb9d081 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -2452,6 +2452,20 @@
+         }
+       }
+     },
++    "node_modules/@firebase/auth-compat/node_modules/@react-native-async-storage/async-storage": {
++      "version": "1.24.0",
++      "resolved": "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.24.0.tgz",
++      "integrity": "sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==",
++      "license": "MIT",
++      "optional": true,
++      "peer": true,
++      "dependencies": {
++        "merge-options": "^3.0.4"
++      },
++      "peerDependencies": {
++        "react-native": "^0.0.0-0 || >=0.60 <1.0"
++      }
++    },
+     "node_modules/@firebase/auth-interop-types": {
+       "version": "0.2.3",
+       "resolved": "https://registry.npmjs.org/@firebase/auth-interop-types/-/auth-interop-types-0.2.3.tgz",
+@@ -7894,6 +7908,20 @@
+         }
+       }
+     },
++    "node_modules/firebase/node_modules/@react-native-async-storage/async-storage": {
++      "version": "1.24.0",
++      "resolved": "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.24.0.tgz",
++      "integrity": "sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==",
++      "license": "MIT",
++      "optional": true,
++      "peer": true,
++      "dependencies": {
++        "merge-options": "^3.0.4"
++      },
++      "peerDependencies": {
++        "react-native": "^0.0.0-0 || >=0.60 <1.0"
++      }
++    },
+     "node_modules/flat-cache": {
+       "version": "3.2.0",
+       "resolved": "https://registry.npmjs.org/flat-cache/-/flat-cache-3.2.0.tgz",
+diff --git a/src/components/Autocomplete/Autocomplete.tsx b/src/components/Autocomplete/Autocomplete.tsx
+index 62dd12c..8753fca 100644
+--- a/src/components/Autocomplete/Autocomplete.tsx
++++ b/src/components/Autocomplete/Autocomplete.tsx
+@@ -70,6 +70,8 @@ export function Autocomplete({
+         >
+           {suggestions.map((item, index) => (
+             <Pressable
++              accessibilityRole="button"
++              accessibilityLabel={item}
+               key={item}
+               onPress={() => handleSelect(item)}
+               style={({ pressed }) => [
+diff --git a/src/features/fuel-comparison/screens/ComparisonHistoryScreen.tsx b/src/features/fuel-comparison/screens/ComparisonHistoryScreen.tsx
+index 131dcaf..0d43a16 100644
+--- a/src/features/fuel-comparison/screens/ComparisonHistoryScreen.tsx
++++ b/src/features/fuel-comparison/screens/ComparisonHistoryScreen.tsx
+@@ -55,6 +55,7 @@ export function ComparisonHistoryScreen() {
+         />
+       ) : (
+         <FlatList
++          accessibilityLabel="Lista de comparações"
+           data={items}
+           keyExtractor={(item) => item.id}
+           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+diff --git a/src/features/refueling/screens/RefuelingFormScreen.tsx b/src/features/refueling/screens/RefuelingFormScreen.tsx
+index 697d3ef..8192c36 100644
+--- a/src/features/refueling/screens/RefuelingFormScreen.tsx
++++ b/src/features/refueling/screens/RefuelingFormScreen.tsx
+@@ -187,7 +187,13 @@ export function RefuelingFormScreen() {
+ 
+         <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
+           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Tanque cheio</Text>
+-          <Switch value={fullTank} onValueChange={setFullTank} />
++          <Switch
++            accessibilityRole="switch"
++            accessibilityLabel="Tanque cheio"
++            accessibilityState={{ checked: fullTank }}
++            value={fullTank}
++            onValueChange={setFullTank}
++          />
+         </View>
+ 
+         {totalCost > 0 && (
+diff --git a/src/features/refueling/screens/RefuelingHistoryScreen.tsx b/src/features/refueling/screens/RefuelingHistoryScreen.tsx
+index 0c13b2f..120db5a 100644
+--- a/src/features/refueling/screens/RefuelingHistoryScreen.tsx
++++ b/src/features/refueling/screens/RefuelingHistoryScreen.tsx
+@@ -76,6 +76,7 @@ export function RefuelingHistoryScreen() {
+         </View>
+       ) : (
+         <FlatList
++          accessibilityLabel="Histórico de abastecimentos"
+           data={items}
+           keyExtractor={(item) => item.id}
+           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+diff --git a/src/features/stations/screens/StationsMapScreen.tsx b/src/features/stations/screens/StationsMapScreen.tsx
+index a8a16b9..514bab0 100644
+--- a/src/features/stations/screens/StationsMapScreen.tsx
++++ b/src/features/stations/screens/StationsMapScreen.tsx
+@@ -209,6 +209,7 @@ export function StationsMapScreen() {
+ 
+       {/* A lista é a alternativa acessível ao mapa (leitor de tela não lê o WebView). */}
+       <FlatList
++        accessibilityLabel="Lista de postos próximos"
+         data={stations}
+         keyExtractor={(item) => item.id}
+         contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+diff --git a/src/features/trip-calculator/screens/TripCalculatorScreen.tsx b/src/features/trip-calculator/screens/TripCalculatorScreen.tsx
+index 54fded8..c5294bd 100644
+--- a/src/features/trip-calculator/screens/TripCalculatorScreen.tsx
++++ b/src/features/trip-calculator/screens/TripCalculatorScreen.tsx
+@@ -101,7 +101,13 @@ export function TripCalculatorScreen() {
+         <MoneyInput label="Preço do combustível (R$/L)" value={price} onChangeValue={setPrice} />
+         <View style={[styles.row, { marginTop: theme.spacing.xs }]}>
+           <Text style={[theme.typography.body, { color: theme.colors.text }]}>Ida e volta</Text>
+-          <Switch value={roundTrip} onValueChange={setRoundTrip} />
++          <Switch
++            accessibilityRole="switch"
++            accessibilityLabel="Ida e volta"
++            accessibilityState={{ checked: roundTrip }}
++            value={roundTrip}
++            onValueChange={setRoundTrip}
++          />
+         </View>
+ 
+         <Input
+diff --git a/src/features/trip-calculator/screens/TripHistoryScreen.tsx b/src/features/trip-calculator/screens/TripHistoryScreen.tsx
+index 492329e..1d8939b 100644
+--- a/src/features/trip-calculator/screens/TripHistoryScreen.tsx
++++ b/src/features/trip-calculator/screens/TripHistoryScreen.tsx
+@@ -44,6 +44,7 @@ export function TripHistoryScreen() {
+         />
+       ) : (
+         <FlatList
++          accessibilityLabel="Histórico de viagens"
+           data={items}
+           keyExtractor={(item) => item.id}
+           contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+diff --git a/src/theme/__tests__/guards.test.ts b/src/theme/__tests__/guards.test.ts
+index 8cea85b..cfbbb18 100644
+--- a/src/theme/__tests__/guards.test.ts
++++ b/src/theme/__tests__/guards.test.ts
+@@ -48,3 +48,61 @@ describe('guardas de design', () => {
+     expect(offenders.map((f) => path.relative(SRC, f))).toEqual([]);
+   });
+ });
++
++describe('guardas de acessibilidade', () => {
++  it('todo Switch tem accessibilityRole e accessibilityLabel', () => {
++    const switchPat = /<Switch\b([^/]*?)\/>/gs;
++    const offenders: string[] = [];
++    for (const f of files) {
++      if (!f.endsWith('.tsx')) continue;
++      const content = code(f);
++      for (const m of content.matchAll(switchPat)) {
++        const block = m[0] ?? '';
++        if (!block.includes('accessibilityRole') || !block.includes('accessibilityLabel')) {
++          offenders.push(path.relative(SRC, f));
++        }
++      }
++    }
++    expect(offenders).toEqual([]);
++  });
++
++  it('todo Pressable tem accessibilityRole', () => {
++    /**
++     * Coleta o bloco de abertura de cada <Pressable respeitando chaves aninhadas
++     * (os atributos de estilo usam {{…}} que confundiriam um regex simples).
++     */
++    function openingTags(text: string): string[] {
++      const results: string[] = [];
++      // ignora ocorrências em contextos de tipo TypeScript (ex: Omit<PressableProps, ...>)
++      let idx = text.indexOf('<Pressable ');
++      while (idx !== -1) {
++        let depth = 0;
++        let i = idx;
++        while (i < text.length) {
++          if (text[i] === '{') depth++;
++          else if (text[i] === '}') depth--;
++          else if (text[i] === '>' && depth === 0) {
++            results.push(text.slice(idx, i + 1));
++            break;
++          }
++          i++;
++        }
++        idx = text.indexOf('<Pressable', idx + 1);
++      }
++      return results;
++    }
++
++    const offenders: string[] = [];
++    for (const f of files) {
++      if (!f.endsWith('.tsx')) continue;
++      const content = code(f);
++      for (const tag of openingTags(content)) {
++        if (!tag.includes('accessibilityRole')) {
++          offenders.push(path.relative(SRC, f));
++          break;
++        }
++      }
++    }
++    expect(offenders).toEqual([]);
++  });
++});

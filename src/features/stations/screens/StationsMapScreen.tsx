@@ -209,6 +209,7 @@ export function StationsMapScreen() {
 
       {/* A lista é a alternativa acessível ao mapa (leitor de tela não lê o WebView). */}
       <FlatList
+        accessibilityLabel="Lista de postos próximos"
         data={stations}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
