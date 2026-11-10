@@ -51,7 +51,10 @@ export function SettingsScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Configurações" showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl }}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ padding: theme.spacing.xl }}
+      >
         <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>TEMA</Text>
         <View style={{ flexDirection: 'row', gap: theme.spacing.xs, marginTop: theme.spacing.xs }}>
           {THEME_OPTIONS.map((opt) => (

@@ -55,7 +55,7 @@ export function UpdateModal({
         >
           <Text
             accessibilityRole="header"
-            style={[theme.typography.title, { color: theme.colors.text, fontSize: 22 }]}
+            style={[theme.typography.heading, { color: theme.colors.text }]}
           >
             {required ? 'Atualização necessária' : 'Nova versão disponível'}
           </Text>

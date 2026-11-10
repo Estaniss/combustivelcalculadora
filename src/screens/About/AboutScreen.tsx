@@ -15,8 +15,11 @@ export function AboutScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title="Sobre" showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl }}>
-        <Text style={[theme.typography.title, { color: theme.colors.text, fontSize: 22 }]}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ padding: theme.spacing.xl }}
+      >
+        <Text style={[theme.typography.heading, { color: theme.colors.text }]}>
           {appConfig.appName}
         </Text>
         <Text

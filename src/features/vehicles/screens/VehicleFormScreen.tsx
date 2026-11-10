@@ -137,7 +137,10 @@ export function VehicleFormScreen() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
       <Header title={vehicleId ? 'Editar carro' : 'Novo carro'} showBack />
-      <ScrollView contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+      >
         <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
           ÍCONE DO VEÍCULO
         </Text>

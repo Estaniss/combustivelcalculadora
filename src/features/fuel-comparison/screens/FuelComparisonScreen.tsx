@@ -223,7 +223,7 @@ export function FuelComparisonScreen() {
                 winner={result.cheaperOption}
               />
 
-              <View style={{ gap: 4 }}>
+              <View style={{ gap: theme.spacing.xxs }}>
                 {explanation.reasons.map((line) => (
                   <Text key={line} style={[theme.typography.body, { color: theme.colors.text }]}>
                     {line}
@@ -232,7 +232,7 @@ export function FuelComparisonScreen() {
               </View>
 
               {explanation.savings.length > 0 && (
-                <View style={{ gap: 4 }}>
+                <View style={{ gap: theme.spacing.xxs }}>
                   {explanation.savings.map((line) => (
                     <Text
                       key={line}
