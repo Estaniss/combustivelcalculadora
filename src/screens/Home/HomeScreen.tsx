@@ -29,12 +29,42 @@ const QUICK_ACTIONS: {
   route: keyof RootStackParamList;
   illustration: IllustrationName;
 }[] = [
-  { label: 'Quanto vou\ngastar?', hint: 'Calcular custo de viagem', route: 'TripCalculator', illustration: 'route' },
-  { label: 'Gasolina\nx Etanol', hint: 'Comparar combustíveis', route: 'FuelComparison', illustration: 'drops' },
-  { label: 'Meu\nconsumo', hint: 'Calcular consumo do carro', route: 'Consumption', illustration: 'gauge' },
-  { label: 'Abastecer', hint: 'Registrar abastecimento', route: 'RefuelingForm', illustration: 'pump' },
-  { label: 'Modo\nviagem', hint: 'Rastrear viagem por GPS', route: 'TripMode', illustration: 'trip' },
-  { label: 'Postos\nperto', hint: 'Ver postos de combustível próximos', route: 'StationsMap', illustration: 'station' },
+  {
+    label: 'Quanto vou\ngastar?',
+    hint: 'Calcular custo de viagem',
+    route: 'TripCalculator',
+    illustration: 'route',
+  },
+  {
+    label: 'Gasolina\nx Etanol',
+    hint: 'Comparar combustíveis',
+    route: 'FuelComparison',
+    illustration: 'drops',
+  },
+  {
+    label: 'Meu\nconsumo',
+    hint: 'Calcular consumo do carro',
+    route: 'Consumption',
+    illustration: 'gauge',
+  },
+  {
+    label: 'Abastecer',
+    hint: 'Registrar abastecimento',
+    route: 'RefuelingForm',
+    illustration: 'pump',
+  },
+  {
+    label: 'Modo\nviagem',
+    hint: 'Rastrear viagem por GPS',
+    route: 'TripMode',
+    illustration: 'trip',
+  },
+  {
+    label: 'Postos\nperto',
+    hint: 'Ver postos de combustível próximos',
+    route: 'StationsMap',
+    illustration: 'station',
+  },
 ];
 
 function ActionCard({
@@ -50,7 +80,11 @@ function ActionCard({
 
   const animateTo = (v: number) => {
     if (reduced) return;
-    Animated.timing(scale, { toValue: v, duration: theme.motion.fast, useNativeDriver: true }).start();
+    Animated.timing(scale, {
+      toValue: v,
+      duration: theme.motion.fast,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
@@ -111,7 +145,10 @@ export function HomeScreen() {
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={[theme.typography.bodyMedium, { color: theme.colors.text, flex: 1, marginRight: 8 }]}
+          style={[
+            theme.typography.bodyMedium,
+            { color: theme.colors.text, flex: 1, marginRight: 8 },
+          ]}
         >
           {appConfig.appName}
         </Text>
@@ -132,6 +169,7 @@ export function HomeScreen() {
       </View>
 
       <ScrollView
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.lg }}
         showsVerticalScrollIndicator={false}
       >
@@ -171,12 +209,17 @@ export function HomeScreen() {
                 {vehicle.brand || vehicle.model ? (
                   <Text
                     numberOfLines={1}
-                    style={[theme.typography.caption, { color: theme.colors.onPrimary, opacity: 0.8 }]}
+                    style={[
+                      theme.typography.caption,
+                      { color: theme.colors.onPrimary, opacity: 0.8 },
+                    ]}
                   >
                     {[vehicle.brand, vehicle.model, vehicle.year].filter(Boolean).join(' ')}
                   </Text>
                 ) : null}
-                <View style={[styles.chips, { gap: theme.spacing.xxs, marginTop: theme.spacing.xxs }]}>
+                <View
+                  style={[styles.chips, { gap: theme.spacing.xxs, marginTop: theme.spacing.xxs }]}
+                >
                   {vehicle.gasolineConsumption ? (
                     <Badge
                       label={`Gasolina ${formatKmPerLiter(vehicle.gasolineConsumption)}`}
@@ -189,7 +232,9 @@ export function HomeScreen() {
                       tone="accent"
                     />
                   ) : null}
-                  {!vehicle.gasolineConsumption && !vehicle.ethanolConsumption && vehicle.averageConsumption ? (
+                  {!vehicle.gasolineConsumption &&
+                  !vehicle.ethanolConsumption &&
+                  vehicle.averageConsumption ? (
                     <Badge
                       label={`Consumo ${formatKmPerLiter(vehicle.averageConsumption)}`}
                       tone="accent"
@@ -211,12 +256,15 @@ export function HomeScreen() {
                   },
                 ]}
               >
-                <Text style={[theme.typography.caption, { color: theme.colors.onPrimary, opacity: 0.8 }]}>
+                <Text
+                  style={[
+                    theme.typography.caption,
+                    { color: theme.colors.onPrimary, opacity: 0.8 },
+                  ]}
+                >
                   Último abastecimento
                 </Text>
-                <Text
-                  style={[theme.typography.bodyMedium, { color: theme.colors.onPrimary }]}
-                >
+                <Text style={[theme.typography.bodyMedium, { color: theme.colors.onPrimary }]}>
                   {formatCurrency(lastRefueling.totalCost)}
                   {'  ·  '}
                   {lastRefueling.liters.toFixed(1)} L
@@ -243,11 +291,22 @@ export function HomeScreen() {
           </Card>
         ) : (
           <Card>
-            <Text style={[theme.typography.subtitle, { color: theme.colors.text, fontFamily: fonts.semibold }]}>
+            <Text
+              style={[
+                theme.typography.subtitle,
+                { color: theme.colors.text, fontFamily: fonts.semibold },
+              ]}
+            >
               Cadastre seu carro
             </Text>
-            <Text style={[theme.typography.caption, { color: theme.colors.textSecondary, marginTop: 4 }]}>
-              Salve seu veículo para acompanhar consumo e gastos — ou use as calculadoras sem cadastro.
+            <Text
+              style={[
+                theme.typography.caption,
+                { color: theme.colors.textSecondary, marginTop: 4 },
+              ]}
+            >
+              Salve seu veículo para acompanhar consumo e gastos — ou use as calculadoras sem
+              cadastro.
             </Text>
             <View style={{ marginTop: theme.spacing.sm }}>
               <Button
@@ -262,7 +321,10 @@ export function HomeScreen() {
         {/* Ações rápidas */}
         <View>
           <Text
-            style={[theme.typography.microUppercase, { color: theme.colors.textMuted, marginBottom: theme.spacing.xs }]}
+            style={[
+              theme.typography.microUppercase,
+              { color: theme.colors.textMuted, marginBottom: theme.spacing.xs },
+            ]}
           >
             Ações rápidas
           </Text>

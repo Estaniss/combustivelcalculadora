@@ -43,7 +43,10 @@ export function StatisticsScreen() {
           description="Registre alguns abastecimentos para ver suas estatísticas do mês."
         />
       ) : (
-        <ScrollView contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ padding: theme.spacing.xl, gap: theme.spacing.xs }}
+        >
           <Text style={[theme.typography.caption, { color: theme.colors.textSecondary }]}>
             ESTE MÊS
           </Text>
