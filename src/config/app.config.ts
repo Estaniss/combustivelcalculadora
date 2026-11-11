@@ -1,8 +1,8 @@
-/**
+﻿/**
  * =============================================================
- *  ARQUIVO PRINCIPAL DE CONFIGURAÇÃO DO APP
+ *  ARQUIVO PRINCIPAL DE CONFIGURAÃ‡ÃƒO DO APP
  * =============================================================
- * Este é o ÚNICO arquivo que normalmente precisa ser editado
+ * Este Ã© o ÃšNICO arquivo que normalmente precisa ser editado
  * para transformar este template em um novo aplicativo.
  * =============================================================
  */
@@ -34,14 +34,14 @@ export interface AppConfig {
   privacyPolicyUrl: string;
   termsUrl: string;
 
-  /** package name Android — usado para montar a URL da Play Store */
+  /** package name Android â€” usado para montar a URL da Play Store */
   androidPackageName: string;
 }
 
 export const appConfig: AppConfig = {
-  appName: 'Combustível — Calculadora e Controle',
+  appName: "Combustível — Calculadora e Controle",
   appSlug: 'combustivel-calculadora-controle',
-  appVersion: '1.0.5',
+  appVersion: '1.0.6',
   appDescription:
     'Calcule gastos de viagem, compare gasolina x etanol e controle seus abastecimentos.',
   developerName: 'Estanis',
