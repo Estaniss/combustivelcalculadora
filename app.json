@@ -1,8 +1,8 @@
-{
+﻿{
   "expo": {
-    "name": "Combustível — Calculadora e Controle",
+    "name": "CombustÃ­vel â€” Calculadora e Controle",
     "slug": "combustivel-calculadora-controle",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,7 +12,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.estanislau.combustivelcalculadora",
-      "versionCode":5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F8F8F3"
@@ -40,7 +40,7 @@
   [
     "expo-location",
     {
-      "locationWhenInUsePermission": "O Combustível usa sua localização para medir a distância da viagem e mostrar postos próximos.",
+      "locationWhenInUsePermission": "O CombustÃ­vel usa sua localizaÃ§Ã£o para medir a distÃ¢ncia da viagem e mostrar postos prÃ³ximos.",
       "isAndroidForegroundServiceEnabled": true
     }
   ]
