@@ -1,6 +1,6 @@
 ﻿{
   "expo": {
-    "name": "CombustÃ­vel â€” Calculadora e Controle",
+    "name": "Combustível — Calculadora e Controle",
     "slug": "combustivel-calculadora-controle",
     "version": "1.0.6",
     "orientation": "portrait",
@@ -40,7 +40,7 @@
   [
     "expo-location",
     {
-      "locationWhenInUsePermission": "O CombustÃ­vel usa sua localizaÃ§Ã£o para medir a distÃ¢ncia da viagem e mostrar postos prÃ³ximos.",
+      "locationWhenInUsePermission": "O Combustível usa sua localização para medir a distância da viagem e mostrar postos próximos.",
       "isAndroidForegroundServiceEnabled": true
     }
   ]

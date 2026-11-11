@@ -39,7 +39,7 @@ export interface AppConfig {
 }
 
 export const appConfig: AppConfig = {
-  appName: 'CombustÃ­vel â€” Calculadora e Controle',
+  appName: "Combustível — Calculadora e Controle",
   appSlug: 'combustivel-calculadora-controle',
   appVersion: '1.0.6',
   appDescription:
