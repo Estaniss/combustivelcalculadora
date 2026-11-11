@@ -1,15 +1,15 @@
-```powershell
 <#
 .SYNOPSIS
   Incrementa a versao do Combustivel e gera o AAB de producao via EAS.
 
 .DESCRIPTION
-  1. Valida Git, ferramentas e arquivos JSON.
-  2. Incrementa version e versionCode.
-  3. Atualiza app.json e version.json.
-  4. Executa EAS Build de producao.
-  5. Se o build falhar, restaura os arquivos originais.
-  6. Se o build passar, cria o commit Git.
+  - Valida Git e ferramentas necessarias.
+  - Incrementa app.json (version e versionCode).
+  - Atualiza version.json (latestVersion).
+  - Atualiza src/config/app.config.ts (appVersion).
+  - Executa EAS Build Android Production.
+  - Restaura os arquivos se o build falhar.
+  - Cria commit Git somente apos build bem-sucedido.
 
 .PARAMETER BumpType
   patch (padrao), minor ou major.
@@ -29,24 +29,26 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # ============================================================
-# CONFIGURACAO
+# 1. CONFIGURACAO
 # ============================================================
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 $appJson = Join-Path $root 'app.json'
 $versionJson = Join-Path $root 'version.json'
+$appConfigTs = Join-Path $root 'src\config\app.config.ts'
 
 $utf8Bom = New-Object System.Text.UTF8Encoding -ArgumentList $true
 
 $originalAppJson = $null
 $originalVersionJson = $null
-$versionJsonExists = Test-Path $versionJson
+$originalAppConfigTs = $null
 
+$versionJsonExists = Test-Path $versionJson
 $filesModified = $false
 
 # ============================================================
-# FUNCOES
+# 2. FUNCOES AUXILIARES
 # ============================================================
 
 function Write-Section {
@@ -88,6 +90,10 @@ function Restore-OriginalFiles {
         Write-Utf8File -Path $appJson -Content $originalAppJson
     }
 
+    if ($null -ne $originalAppConfigTs) {
+        Write-Utf8File -Path $appConfigTs -Content $originalAppConfigTs
+    }
+
     if ($versionJsonExists -and $null -ne $originalVersionJson) {
         Write-Utf8File -Path $versionJson -Content $originalVersionJson
     }
@@ -95,23 +101,45 @@ function Restore-OriginalFiles {
     Write-Host "Arquivos restaurados." -ForegroundColor Green
 }
 
+function Replace-ExactlyOnce {
+    param(
+        [string]$Content,
+        [string]$Pattern,
+        [string]$Replacement,
+        [string]$Description
+    )
+
+    $matches = [regex]::Matches($Content, $Pattern)
+
+    if ($matches.Count -ne 1) {
+        throw "Esperada exatamente uma ocorrencia de $Description. Encontradas: $($matches.Count)"
+    }
+
+    $regex = [regex]::new($Pattern)
+
+    return $regex.Replace($Content, $Replacement, 1)
+}
+
 # ============================================================
-# 1. VALIDACOES INICIAIS
+# 3. VALIDACOES INICIAIS
 # ============================================================
 
 Write-Section "VALIDACAO INICIAL"
 
 if (-not (Test-Path $appJson)) {
-    throw "app.json nao encontrado em: $root"
+    throw "app.json nao encontrado."
+}
+
+if (-not (Test-Path $appConfigTs)) {
+    throw "src/config/app.config.ts nao encontrado."
 }
 
 if (-not (Test-Path (Join-Path $root 'package.json'))) {
-    throw "package.json nao encontrado. Verifique a raiz do projeto."
+    throw "package.json nao encontrado."
 }
 
 Test-Command 'git'
 Test-Command 'node'
-Test-Command 'npm'
 Test-Command 'npx'
 
 Push-Location $root
@@ -128,23 +156,23 @@ try {
     $projectRoot = (Resolve-Path $root).Path
 
     if ($gitRoot -ne $projectRoot) {
-        throw "Execute o script na raiz do repositorio Git."
+        throw "Execute o script na raiz do repositorio."
     }
 
     $gitStatus = git status --porcelain
 
     if ($LASTEXITCODE -ne 0) {
-        throw "Nao foi possivel verificar o estado do Git."
+        throw "Nao foi possivel verificar o Git."
     }
 
     if ($gitStatus) {
         Write-Host $gitStatus -ForegroundColor Yellow
-        throw "Git possui alteracoes pendentes. Faca commit ou stash antes do release."
+        throw "Existem alteracoes pendentes no Git. Faca commit ou stash antes."
     }
 
     Write-Host "Git: OK" -ForegroundColor Green
     Write-Host "Node.js: OK" -ForegroundColor Green
-    Write-Host "npm: OK" -ForegroundColor Green
+    Write-Host "npx: OK" -ForegroundColor Green
 
 }
 finally {
@@ -152,12 +180,13 @@ finally {
 }
 
 # ============================================================
-# 2. LEITURA E VALIDACAO DOS JSON
+# 4. LEITURA DOS ARQUIVOS
 # ============================================================
 
 Write-Section "LEITURA DAS VERSOES"
 
 $originalAppJson = Get-Content $appJson -Raw
+$originalAppConfigTs = Get-Content $appConfigTs -Raw
 
 try {
     $app = $originalAppJson | ConvertFrom-Json
@@ -192,13 +221,40 @@ if ($currentVersion -notmatch '^(\d+)\.(\d+)\.(\d+)$') {
     throw "Versao invalida: $currentVersion. Esperado X.Y.Z."
 }
 
+# Valida app.config.ts.
+$appConfigMatches = [regex]::Matches(
+    $originalAppConfigTs,
+    "appVersion\s*:\s*'[^']+'"
+)
+
+if ($appConfigMatches.Count -ne 1) {
+    throw "Propriedade appVersion nao encontrada ou duplicada em app.config.ts."
+}
+
+# Valida version.json, se existir.
+if ($versionJsonExists) {
+
+    $originalVersionJson = Get-Content $versionJson -Raw
+
+    try {
+        $versionData = $originalVersionJson | ConvertFrom-Json
+    }
+    catch {
+        throw "version.json possui JSON invalido."
+    }
+
+    if ($null -eq $versionData.PSObject.Properties['latestVersion']) {
+        throw "latestVersion nao encontrada em version.json."
+    }
+}
+
+# ============================================================
+# 5. CALCULO DA NOVA VERSAO
+# ============================================================
+
 $major = [int]$Matches[1]
 $minor = [int]$Matches[2]
 $patch = [int]$Matches[3]
-
-# ============================================================
-# 3. CALCULO DA NOVA VERSAO
-# ============================================================
 
 switch ($BumpType) {
 
@@ -221,24 +277,8 @@ switch ($BumpType) {
 $newVersion = "$major.$minor.$patch"
 $newCode = $currentCode + 1
 
-if ($versionJsonExists) {
-
-    $originalVersionJson = Get-Content $versionJson -Raw
-
-    try {
-        $versionData = $originalVersionJson | ConvertFrom-Json
-    }
-    catch {
-        throw "version.json possui JSON invalido."
-    }
-
-    if ($null -eq $versionData.PSObject.Properties['latestVersion']) {
-        throw "latestVersion nao encontrada em version.json."
-    }
-}
-
 # ============================================================
-# 4. RESUMO E CONFIRMACAO
+# 6. RESUMO E CONFIRMACAO
 # ============================================================
 
 Write-Section "RESUMO DO RELEASE"
@@ -248,7 +288,11 @@ Write-Host ""
 Write-Host "Version:     $currentVersion -> $newVersion"
 Write-Host "VersionCode: $currentCode -> $newCode"
 Write-Host "BumpType:    $BumpType"
-Write-Host "Build:       Android / Production / AAB"
+Write-Host ""
+Write-Host "Arquivos que serao atualizados:"
+Write-Host "  - app.json"
+Write-Host "  - version.json"
+Write-Host "  - src/config/app.config.ts"
 Write-Host ""
 
 $confirm = Read-Host "Confirma o release de producao? (s/N)"
@@ -259,87 +303,80 @@ if ($confirm -notmatch '^[sS]$') {
 }
 
 # ============================================================
-# 5. ATUALIZACAO DOS ARQUIVOS
+# 7. ATUALIZACAO DOS ARQUIVOS
 # ============================================================
 
 Write-Section "ATUALIZANDO VERSOES"
 
 try {
 
-    $versionMatches = [regex]::Matches(
-        $originalAppJson,
-        '"version"\s*:\s*"[^"]+"'
-    )
+    # app.json - version.
+    $newAppJson = Replace-ExactlyOnce `
+        -Content $originalAppJson `
+        -Pattern '"version"\s*:\s*"[^"]+"' `
+        -Replacement ('"version": "' + $newVersion + '"') `
+        -Description 'version em app.json'
 
-    $codeMatches = [regex]::Matches(
-        $originalAppJson,
-        '"versionCode"\s*:\s*\d+'
-    )
+    # app.json - versionCode.
+    $newAppJson = Replace-ExactlyOnce `
+        -Content $newAppJson `
+        -Pattern '"versionCode"\s*:\s*\d+' `
+        -Replacement ('"versionCode": ' + $newCode) `
+        -Description 'versionCode em app.json'
 
-    if ($versionMatches.Count -ne 1) {
-        throw "Esperada exatamente uma propriedade version em app.json."
-    }
-
-    if ($codeMatches.Count -ne 1) {
-        throw "Esperada exatamente uma propriedade versionCode em app.json."
-    }
-
-    $newAppJson = [regex]::Replace(
-        $originalAppJson,
-        '"version"\s*:\s*"[^"]+"',
-        ('"version": "' + $newVersion + '"'),
-        1
-    )
-
-    $newAppJson = [regex]::Replace(
-        $newAppJson,
-        '"versionCode"\s*:\s*\d+',
-        ('"versionCode": ' + $newCode),
-        1
-    )
-
-    # Valida o resultado antes de gravar.
+    # Valida app.json atualizado.
     $validatedApp = $newAppJson | ConvertFrom-Json
 
     if ($validatedApp.expo.version -ne $newVersion) {
-        throw "Falha na validacao da nova versao."
+        throw "Validacao de version falhou."
     }
 
     if ([int]$validatedApp.expo.android.versionCode -ne $newCode) {
-        throw "Falha na validacao do novo versionCode."
+        throw "Validacao de versionCode falhou."
     }
 
-    # Atualiza version.json.
+    # version.json.
     if ($versionJsonExists) {
 
-        $newVersionJson = [regex]::Replace(
-            $originalVersionJson,
-            '"latestVersion"\s*:\s*"[^"]+"',
-            ('"latestVersion": "' + $newVersion + '"'),
-            1
-        )
+        $newVersionJson = Replace-ExactlyOnce `
+            -Content $originalVersionJson `
+            -Pattern '"latestVersion"\s*:\s*"[^"]+"' `
+            -Replacement ('"latestVersion": "' + $newVersion + '"') `
+            -Description 'latestVersion em version.json'
 
         $validatedVersion = $newVersionJson | ConvertFrom-Json
 
         if ($validatedVersion.latestVersion -ne $newVersion) {
-            throw "Falha na validacao de version.json."
+            throw "Validacao de version.json falhou."
         }
     }
 
-    # Grava os arquivos.
+    # app.config.ts.
+    $newAppConfigTs = Replace-ExactlyOnce `
+        -Content $originalAppConfigTs `
+        -Pattern "appVersion\s*:\s*'[^']+'" `
+        -Replacement ("appVersion: '" + $newVersion + "'") `
+        -Description 'appVersion em app.config.ts'
+
+    # Marca antes de gravar para permitir rollback
+    # mesmo se uma gravacao falhar no meio do processo.
+    $filesModified = $true
+
     Write-Utf8File -Path $appJson -Content $newAppJson
 
     if ($versionJsonExists) {
         Write-Utf8File -Path $versionJson -Content $newVersionJson
     }
 
-    $filesModified = $true
+    Write-Utf8File -Path $appConfigTs -Content $newAppConfigTs
 
     Write-Host "app.json atualizado." -ForegroundColor Green
 
     if ($versionJsonExists) {
         Write-Host "version.json atualizado." -ForegroundColor Green
     }
+
+    Write-Host "app.config.ts atualizado." -ForegroundColor Green
 
 }
 catch {
@@ -352,30 +389,39 @@ catch {
 }
 
 # ============================================================
-# 6. EAS BUILD
+# 8. EAS BUILD
 # ============================================================
 
 Write-Section "EAS BUILD - PRODUCAO"
 
 Write-Host "Iniciando build Android..." -ForegroundColor Cyan
-Write-Host "O processo sera acompanhado ate sua conclusao."
+Write-Host "Aguarde a conclusao do processo."
 Write-Host ""
 
 try {
 
-    & npx eas-cli build `
-        --platform android `
-        --profile production `
-        --non-interactive
+    Push-Location $root
 
-    $buildExitCode = $LASTEXITCODE
+    try {
 
-    if ($buildExitCode -ne 0) {
-        throw "EAS Build falhou. Codigo de saida: $buildExitCode"
+        & npx eas-cli build `
+            --platform android `
+            --profile production `
+            --non-interactive
+
+        $buildExitCode = $LASTEXITCODE
+
+        if ($buildExitCode -ne 0) {
+            throw "EAS Build falhou. Codigo: $buildExitCode"
+        }
+
+    }
+    finally {
+        Pop-Location
     }
 
     Write-Host ""
-    Write-Host "Build concluido com sucesso!" -ForegroundColor Green
+    Write-Host "EAS Build finalizado com sucesso!" -ForegroundColor Green
 
 }
 catch {
@@ -387,13 +433,14 @@ catch {
     Restore-OriginalFiles
 
     Write-Host ""
-    Write-Host "Release cancelado. Nenhum commit foi criado." -ForegroundColor Yellow
+    Write-Host "Release cancelado." -ForegroundColor Yellow
+    Write-Host "Nenhum commit foi criado."
 
     exit 1
 }
 
 # ============================================================
-# 7. COMMIT GIT
+# 9. COMMIT GIT
 # ============================================================
 
 Write-Section "COMMIT GIT"
@@ -417,10 +464,16 @@ try {
         }
     }
 
+    git add src/config/app.config.ts
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Falha ao adicionar app.config.ts."
+    }
+
     git commit -m "chore: release v$newVersion (versionCode $newCode)"
 
     if ($LASTEXITCODE -ne 0) {
-        throw "Build concluido, mas houve falha ao criar o commit."
+        throw "Falha ao criar commit."
     }
 
     Write-Host "Commit criado com sucesso!" -ForegroundColor Green
@@ -431,7 +484,10 @@ catch {
     Write-Host ""
     Write-Host "ATENCAO: O BUILD FOI GERADO, MAS O COMMIT FALHOU." -ForegroundColor Yellow
     Write-Host $_.Exception.Message -ForegroundColor Red
-    Write-Host "Nao restaure as versoes: elas correspondem ao AAB gerado."
+
+    Write-Host ""
+    Write-Host "Os arquivos NAO serao restaurados."
+    Write-Host "Eles correspondem a versao do AAB gerado."
     Write-Host "Verifique o Git e finalize o commit manualmente."
 
     exit 1
@@ -442,7 +498,7 @@ finally {
 }
 
 # ============================================================
-# 8. RESULTADO FINAL
+# 10. RESULTADO FINAL
 # ============================================================
 
 Write-Section "RELEASE CONCLUIDO"
@@ -457,10 +513,10 @@ Write-Host "Perfil: Production"
 Write-Host "Git: Commit criado"
 Write-Host ""
 
-Write-Host "Consulte o historico de builds em:" -ForegroundColor Cyan
+Write-Host "Consulte o historico de builds:" -ForegroundColor Cyan
 Write-Host "https://expo.dev/accounts/SEU_USUARIO/projects/SEU_PROJETO/builds"
 
 Write-Host ""
-Write-Host "IMPORTANTE: Confira o AAB no EAS antes de enviar para a Play Store." -ForegroundColor Yellow
+Write-Host "IMPORTANTE:" -ForegroundColor Yellow
+Write-Host "Confira o AAB no EAS antes de enviar para a Play Store."
 Write-Host ""
-```
